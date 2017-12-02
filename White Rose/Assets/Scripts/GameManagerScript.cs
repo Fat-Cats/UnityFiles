@@ -23,10 +23,10 @@ public class GameManagerScript : MonoBehaviour
         counter = 0;
     }
 
-    void CreateUnit(string unitType, GameObject sector, GameObject player)                                                              // should turn unitType to enum. Or could just catch errors.
+    void CreateUnit(string unitType, GameObject sector, GameObject player) // should turn unitType to enum. Or could just catch errors.
      {
          temp = Instantiate(unit, sector.GetComponent<SectorScript>().getVector3(), Quaternion.identity);
-         temp.GetComponent<UnitScript>().Init(unitType, counter, sector, player);                                                             // Placeholder (unitType, uid, sector, player)
+         temp.GetComponent<UnitScript>().Init(unitType, counter, sector, player); // Placeholder (unitType, uid, sector, player)
          unitList.Add(temp);
      }
     

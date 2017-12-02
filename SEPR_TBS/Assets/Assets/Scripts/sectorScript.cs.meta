@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 9e26d79cb263bcd4dbe95bfc0ea62e52
+timeCreated: 1512169047
+licenseType: Free
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - sectorSprite: {fileID: 21300000, guid: 39d9fa7915daec842b011716c8e9621b, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
