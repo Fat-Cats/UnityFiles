@@ -81,17 +81,10 @@ public class gameMapScript : MonoBehaviour
         }
 
         //create 3 basic units for testing
-        //Instantiate(unit, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<unitScript>().Init("Basic", GetComponentInParent<gameMainScript>().playerList[1], sectors[4]);
-        //Instantiate(unit, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<unitScript>().Init("Basic", GetComponentInParent<gameMainScript>().playerList[0], sectors[4]);
-        //Instantiate(unit, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<unitScript>().Init("Basic", GetComponentInParent<gameMainScript>().playerList[0], sectors[4]);
-        //Instantiate(unit, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<unitScript>().Init("Basic", GetComponentInParent<gameMainScript>().playerList[0], sectors[18]);
-
-        for (int x = 0; x <= 30; x++)
-        {
-            Instantiate(unit, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<unitScript>().Init("Basic", GetComponentInParent<gameMainScript>().playerList[0], sectors[x]);
-            Instantiate(unit, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<unitScript>().Init("Basic", GetComponentInParent<gameMainScript>().playerList[0], sectors[x]);
-            Instantiate(unit, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<unitScript>().Init("Basic", GetComponentInParent<gameMainScript>().playerList[0], sectors[x]);
-        }
+        Instantiate(unit, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<unitScript>().Init("Basic", GetComponentInParent<gameMainScript>().playerList[1], sectors[4]);
+        Instantiate(unit, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<unitScript>().Init("Basic", GetComponentInParent<gameMainScript>().playerList[0], sectors[4]);
+        Instantiate(unit, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<unitScript>().Init("Basic", GetComponentInParent<gameMainScript>().playerList[0], sectors[4]);
+        Instantiate(unit, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<unitScript>().Init("Basic", GetComponentInParent<gameMainScript>().playerList[0], sectors[18]);
     }
 
 
