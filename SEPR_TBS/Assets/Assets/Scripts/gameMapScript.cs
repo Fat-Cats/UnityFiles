@@ -2,58 +2,61 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class gameMapCode : MonoBehaviour {
+public class gameMapScript : MonoBehaviour
+{
 
-    public Transform sector; //prefab for sector
-    public GameObject unit; //prefab for units
-    private List<GameObject> sectors = new List<GameObject>();
-
-    private GameObject _selectedUnit; //used for maintaining current value of selectedUnit (needed for getter and setter use)
-    public GameObject selectedUnit //used for selecting and interacting with units
+    public Transform sector; //prefab for sector (neccessary to point unity to the correct prefab)
+    public GameObject unit; //prefab for units (neccessary to point unity to the correct prefab)
+    private List<GameObject> sectors = new List<GameObject>(); //list of all instances of the sector prefab
+    private GameObject _selectedUnit; //needed to store intermediate values during getter and setter use
+    public GameObject selectedUnit //this variable stores the last unit that has been clicked on by a player
     {
-        get { return this._selectedUnit; }
+        get { return this._selectedUnit; } //return selectedUnit value when requested
 
-        set
+        set //when a new unit is selected, this code highlights that unit and un-highlights the previously selected unit
         {
-            if (selectedUnit != null) //if a unit has previously been selected, remove its borders before changing its value
+            if (_selectedUnit != null) //if a unit has previously been selected, remove its borders before changing selectedUnit's value
             {
                 selectedUnit.gameObject.GetComponent<SpriteGlow.SpriteGlow>().OutlineWidth = 0; //remove old selected unit border
 
-                foreach (GameObject sect in selectedUnit.GetComponent<unitScript>().canMoveTo()) //remove old selected unit "can move to" indicators
+                foreach (GameObject sect in selectedUnit.GetComponent<unitScript>().canMoveTo()) //remove old selected unit's "can move to" indicators
                 {
                     sect.gameObject.GetComponent<SpriteGlow.SpriteGlow>().OutlineWidth = 0;
                 }
             }
 
-            _selectedUnit = value; //set new value
+            _selectedUnit = value; //set new selectedUnit value
 
-            if (selectedUnit != null)
+            if (selectedUnit != null) //if the new unit is not null, highlight it and the sectors to which it can move
             {
-                selectedUnit.gameObject.GetComponent<SpriteGlow.SpriteGlow>().OutlineWidth = 3; //add new selected unit border
-                selectedUnit.gameObject.GetComponent<SpriteGlow.SpriteGlow>().GlowColor = Color.red;
+                selectedUnit.gameObject.GetComponent<SpriteGlow.SpriteGlow>().OutlineWidth = 3; //draw border around unit
+                selectedUnit.gameObject.GetComponent<SpriteGlow.SpriteGlow>().GlowColor = selectedUnit.gameObject.GetComponent<unitScript>().owner.teamColour; //color unit's border using it's team's colour
 
-                foreach (GameObject sect in selectedUnit.GetComponent<unitScript>().canMoveTo()) //add new selected unit "can move to" indicators
+                foreach (GameObject sect in selectedUnit.GetComponent<unitScript>().canMoveTo()) //add new selected unit's "can move to" indicators
                 {
                     sect.gameObject.GetComponent<SpriteGlow.SpriteGlow>().OutlineWidth = 3;
-                    sect.gameObject.GetComponent<SpriteGlow.SpriteGlow>().GlowColor = Color.red;
+                    sect.gameObject.GetComponent<SpriteGlow.SpriteGlow>().GlowColor = selectedUnit.gameObject.GetComponent<unitScript>().owner.teamColour;
                 }
             }
         }
     }
 
     // Use this for initialization
-    void Start () {
-        
-		for (int i = 0; i <= 30; i++) //instantiate 30 sector prefabs, set relevant x and y positions on the map and assign them appropriate sectorID's
-        {
-            Transform createdSector = Instantiate(sector, getSectorCoordinates(i), Quaternion.identity); //instantiate sector prefab and
+    void Start()
+    {
 
-            //scale sectors depending on their sector ID (sectors on east and west are scaled differently than originally sized in artwork)
-            if (i == 0 || i == 1 || i == 2 || i == 4 || i == 5 || i == 6 || i == 8 || i == 11 || i == 12 || i == 14 || i == 15  || i == 16 || i == 17 || i == 20 || i == 24 || i == 25 || i == 26)
+        for (int i = 0; i <= 30; i++) //instantiate 30 sector prefabs, set relevant x and y positions on the map and assign appropriate sectorID's
+        {
+            Transform createdSector = Instantiate(sector, getSectorCoordinates(i), Quaternion.identity); //instantiate new sector and set its position according to
+                                                                                                         //"getSectorCoordinates(i)" which stores sector positions
+                                                                                                         //according to sectorID's
+
+            //scale sectors depending on their sector ID (sectors on east and west are scaled differently than in original artwork)
+            if (i == 0 || i == 1 || i == 2 || i == 4 || i == 5 || i == 6 || i == 8 || i == 11 || i == 12 || i == 14 || i == 15 || i == 16 || i == 17 || i == 20 || i == 24 || i == 25 || i == 26)
             {
                 //scale west sectors
                 float scaleFactor = 0.9183525f;
-                createdSector.localScale = new Vector3(scaleFactor , scaleFactor, scaleFactor);
+                createdSector.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
             }
             else
             {
@@ -62,34 +65,41 @@ public class gameMapCode : MonoBehaviour {
                 createdSector.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
             }
 
-            if (i == 4 || i == 7)
-            {
-                GameObject createUnit = Instantiate(unit, new Vector3(0,0,0), Quaternion.identity);
-                createUnit.GetComponent<unitScript>().Init("Basic", createdSector.gameObject);
-            }
-
-            createdSector.transform.SetParent(this.gameObject.transform); //set gameMap as sector's parent
+            createdSector.transform.SetParent(this.gameObject.transform); //set gameMap as the parent to all sectors
 
             createdSector.GetComponent<sectorScript>().init(i); //perform additional initilization of sector (pass sectorID, choose sector sprite etc...)
 
-            createdSector.gameObject.name = "mapSector" + i.ToString();
-
-            sectors.Add(createdSector.gameObject);
+            sectors.Add(createdSector.gameObject); //add this sector to list of sectors stored in gameMapCode
         }
-            this.selectedUnit = null; //at the start of the game, not units are selected
 
-        for (int i = 0; i <= 30; i++) //now that the sectors have been created, we can loop through them again and add a list of neighbours to each of them
+        this.selectedUnit = null; //at the start of the game, no units are selected
+
+        for (int i = 0; i <= 30; i++) //now all sectors have been created, loop through them again and add a list of neighbours to each of them
         {
-            sectors[i].GetComponent<sectorScript>().neighbours = getSectorNeighbours(i); //used "getSectorNeighbours" to return neighbours of given sector
+            sectors[i].GetComponent<sectorScript>().neighbours = getSectorNeighbours(i); //set sector neighbours according to "getSectorCoordinates(i)"
+                                                                                         //which returns a list of neighbours according to sectorID's 
+        }
+
+        //create 3 basic units for testing
+        //Instantiate(unit, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<unitScript>().Init("Basic", GetComponentInParent<gameMainScript>().playerList[1], sectors[4]);
+        //Instantiate(unit, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<unitScript>().Init("Basic", GetComponentInParent<gameMainScript>().playerList[0], sectors[4]);
+        //Instantiate(unit, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<unitScript>().Init("Basic", GetComponentInParent<gameMainScript>().playerList[0], sectors[4]);
+        //Instantiate(unit, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<unitScript>().Init("Basic", GetComponentInParent<gameMainScript>().playerList[0], sectors[18]);
+
+        for (int x = 0; x <= 30; x++)
+        {
+            Instantiate(unit, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<unitScript>().Init("Basic", GetComponentInParent<gameMainScript>().playerList[0], sectors[x]);
+            Instantiate(unit, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<unitScript>().Init("Basic", GetComponentInParent<gameMainScript>().playerList[0], sectors[x]);
+            Instantiate(unit, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<unitScript>().Init("Basic", GetComponentInParent<gameMainScript>().playerList[0], sectors[x]);
         }
     }
 
 
-    List<GameObject> getSectorNeighbours (int sectorID) //returns a list of all neighbour sectors of a given sector
+    List<GameObject> getSectorNeighbours(int sectorID) //returns a list of all neighbour sectors of a given sector
     {
-        List<GameObject> neighbouringSectors = new List<GameObject>();
+        List<GameObject> neighbouringSectors = new List<GameObject>(); //use list to store neighbouring sectors
 
-        switch(sectorID)
+        switch (sectorID) //hardcoded neighbour sectors
         {
             case 0:
                 neighbouringSectors.Add(sectors[14]);
@@ -277,7 +287,7 @@ public class gameMapCode : MonoBehaviour {
     Vector3 getSectorCoordinates(int sectorID) //returns a vector representing the location of a sector specified by sectorID
     {
         Vector3 coordsToReturn = new Vector3(0, 0, 0);
-        
+
         switch (sectorID) //The locations for the sectors were originally hand placed and then their positions were recorded below
         {
             case 1: coordsToReturn = new Vector3(-10.235f, 4.892f, 0); break;
