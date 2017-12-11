@@ -9,20 +9,58 @@ public class unitScript : MonoBehaviour {
     public int uid; //unique unit identifier
     
     //unit's statistics (these change according to a units class)
-    public int maxHP; //units maximum hp
-    public int attack; //units attack points, used to calculate damage done in battle
-    public int defence; //units defense points, used to calculate hp loss in battle
-    public double accuracy; //units accuracy points, used to calculate damage done in battle
-    public double critical; //units critical points, used to calculate damage done in battle
-    public int speed; //units speed points, indicates how many tiles a unit can move in 1 turn
-    public string special; //units special attack
-
+    private int maxHP; //units maximum hp
+    private int attack; //units attack points, used to calculate damage done in battle
+    private int defence; //units defense points, used to calculate hp loss in battle
+    private double accuracy; //units accuracy points, used to calculate damage done in battle
+    private double critical; //units critical points, used to calculate damage done in battle
+    private int speed; //units speed points, indicates how many tiles a unit can move in 1 turn
+    private string special; //units special attack
     public int curHP; //units current health points
 
     void OnMouseDown() //called when the user clicks on this gameObject
     {
         GameObject theGameMap = GameObject.Find("gameMap"); //switch selected unit variable (stored in gameMap) to this unit
         theGameMap.GetComponent<gameMapScript>().selectedUnit = this.gameObject; 
+    }
+
+    public int GetCurHP()
+    {
+        return curHP;
+    } 
+
+    public int GetAttack()
+    {
+        return attack;
+    }
+
+    public int GetDefence()
+    {
+        return defence;
+    }
+
+    public double GetAccuracy()
+    {
+        return accuracy;
+    }
+
+    public double GetCritical()
+    {
+        return critical;
+    }
+
+    public int GetSpeed()
+    {
+        return speed;
+    }
+    public void Damage(int damage)
+    {      
+        curHP = curHP - damage;     
+    }
+
+    public void Kill()
+    {
+
     }
 
     public List<GameObject> canMoveTo() //return a list of sectors that a unit can move to. This function uses a recursive function "canMoveToRecursive" to calculate which sectors 
@@ -133,7 +171,12 @@ public class unitScript : MonoBehaviour {
         this.gameObject.GetComponent<SpriteGlow.SpriteGlow>().GlowBrightness = 5; //SpriteGlow settings used to assure borders can be drawn correctly
         this.gameObject.GetComponent<SpriteGlow.SpriteGlow>().AlphaThreshold = 0.5f; //SpriteGlow settings used to assure borders can be drawn correctly
 
+        gameMainScript gameManager = GameObject.Find("gameMain").GetComponent<gameMainScript>(); // access to gameManager
+
         this.moveUnit(sector);
+
+        uid = gameManager.unitList.Count; // PLACEHOLDER
+        gameManager.unitList.Add(this.gameObject); // PLACEHOLDER
 
         switch(unitType)
         {
