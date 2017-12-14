@@ -38,13 +38,13 @@ public class gameMainScript : MonoBehaviour {
         int damage = unitAScript.GetAttack();  // Placeholder calculation, will be replace by more sophisticated method
         if (unitAScript.GetAttack() < unitBScript.GetCurHP())
         {
-            unitBScript.Damage(damage);
             DisplayBattle(unitA, unitB, damage, false);
+            unitBScript.Damage(damage);
         }
         else
         {
-            unitBScript.Kill();
             DisplayBattle(unitA, unitB, damage, true);
+            unitBScript.Kill();
         }
 
     }
