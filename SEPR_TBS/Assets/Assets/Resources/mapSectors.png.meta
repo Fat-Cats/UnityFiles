@@ -1,0 +1,550 @@
+fileFormatVersion: 2
+guid: b012a35b06d71ab4d8e161a23d51916e
+timeCreated: 1511906088
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: mapSectors_0
+    21300002: mapSectors_1
+    21300004: mapSectors_2
+    21300006: mapSectors_3
+    21300008: mapSectors_4
+    21300010: mapSectors_5
+    21300012: mapSectors_6
+    21300014: mapSectors_7
+    21300016: mapSectors_8
+    21300018: mapSectors_9
+    21300020: mapSectors_10
+    21300022: mapSectors_11
+    21300024: mapSectors_12
+    21300026: mapSectors_13
+    21300028: mapSectors_14
+    21300030: mapSectors_15
+    21300032: mapSectors_16
+    21300034: mapSectors_17
+    21300036: mapSectors_18
+    21300038: mapSectors_19
+    21300040: mapSectors_20
+    21300042: mapSectors_21
+    21300044: mapSectors_22
+    21300046: mapSectors_23
+    21300048: mapSectors_24
+    21300050: mapSectors_25
+    21300052: mapSectors_26
+    21300054: mapSectors_27
+    21300056: mapSectors_28
+    21300058: mapSectors_29
+    21300060: mapSectors_30
+  externalObjects: {}
+  serializedVersion: 4
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: -1
+    mipBias: -1
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: mapSectors_0
+      rect:
+        serializedVersion: 2
+        x: 188
+        y: 2616
+        width: 247
+        height: 236
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: mapSectors_1
+      rect:
+        serializedVersion: 2
+        x: 624
+        y: 2672
+        width: 241
+        height: 211
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: mapSectors_2
+      rect:
+        serializedVersion: 2
+        x: 2491
+        y: 2544
+        width: 271
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: mapSectors_3
+      rect:
+        serializedVersion: 2
+        x: 4499
+        y: 2244
+        width: 363
+        height: 465
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: mapSectors_4
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 2118
+        width: 210
+        height: 290
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: mapSectors_5
+      rect:
+        serializedVersion: 2
+        x: 807
+        y: 2404
+        width: 299
+        height: 193
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: mapSectors_6
+      rect:
+        serializedVersion: 2
+        x: 1934
+        y: 2344
+        width: 272
+        height: 274
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: mapSectors_7
+      rect:
+        serializedVersion: 2
+        x: 5081
+        y: 2198
+        width: 266
+        height: 388
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: mapSectors_8
+      rect:
+        serializedVersion: 2
+        x: 1855
+        y: 1959
+        width: 199
+        height: 191
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: mapSectors_9
+      rect:
+        serializedVersion: 2
+        x: 3691
+        y: 2089
+        width: 388
+        height: 295
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: mapSectors_10
+      rect:
+        serializedVersion: 2
+        x: 4192
+        y: 1922
+        width: 298
+        height: 303
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: mapSectors_11
+      rect:
+        serializedVersion: 2
+        x: 564
+        y: 1688
+        width: 404
+        height: 345
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: mapSectors_12
+      rect:
+        serializedVersion: 2
+        x: 2281
+        y: 1723
+        width: 316
+        height: 323
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: mapSectors_13
+      rect:
+        serializedVersion: 2
+        x: 5010
+        y: 1521
+        width: 437
+        height: 246
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: mapSectors_14
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1028
+        width: 288
+        height: 218
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: mapSectors_15
+      rect:
+        serializedVersion: 2
+        x: 453
+        y: 1001
+        width: 207
+        height: 286
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: mapSectors_16
+      rect:
+        serializedVersion: 2
+        x: 762
+        y: 1124
+        width: 452
+        height: 227
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: mapSectors_17
+      rect:
+        serializedVersion: 2
+        x: 2733
+        y: 1209
+        width: 207
+        height: 292
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: mapSectors_18
+      rect:
+        serializedVersion: 2
+        x: 3392
+        y: 1177
+        width: 388
+        height: 324
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: mapSectors_19
+      rect:
+        serializedVersion: 2
+        x: 3983
+        y: 1227
+        width: 464
+        height: 447
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: mapSectors_20
+      rect:
+        serializedVersion: 2
+        x: 2553
+        y: 677
+        width: 266
+        height: 266
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: mapSectors_21
+      rect:
+        serializedVersion: 2
+        x: 3124
+        y: 669
+        width: 332
+        height: 288
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: mapSectors_22
+      rect:
+        serializedVersion: 2
+        x: 4587
+        y: 850
+        width: 321
+        height: 289
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: mapSectors_23
+      rect:
+        serializedVersion: 2
+        x: 5159
+        y: 698
+        width: 252
+        height: 285
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: mapSectors_24
+      rect:
+        serializedVersion: 2
+        x: 188
+        y: 531
+        width: 281
+        height: 268
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: mapSectors_25
+      rect:
+        serializedVersion: 2
+        x: 696
+        y: 305
+        width: 340
+        height: 265
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: mapSectors_26
+      rect:
+        serializedVersion: 2
+        x: 1638
+        y: 510
+        width: 196
+        height: 278
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: mapSectors_27
+      rect:
+        serializedVersion: 2
+        x: 2020
+        y: 0
+        width: 491
+        height: 336
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: mapSectors_28
+      rect:
+        serializedVersion: 2
+        x: 2773
+        y: 234
+        width: 302
+        height: 214
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: mapSectors_29
+      rect:
+        serializedVersion: 2
+        x: 3262
+        y: 149
+        width: 366
+        height: 291
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: mapSectors_30
+      rect:
+        serializedVersion: 2
+        x: 4677
+        y: 0
+        width: 423
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    outline: []
+    physicsShape: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

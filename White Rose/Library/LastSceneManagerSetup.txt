@@ -1,4 +1,4 @@
 sceneSetups:
-- path: C:/Users/Mrchazaaa/Documents/GitHub/UnityFiles/SEPR_TBS/Assets/gameMap.unity
+- path: 
   isLoaded: 1
   isActive: 1
