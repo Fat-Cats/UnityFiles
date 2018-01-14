@@ -58,7 +58,7 @@ MonoBehaviour:
   _outlineWidth: 0
   _alphaThreshold: 0.527
   _drawOutside: 0
-  _enableInstancing: 1
+  _enableInstancing: 0
 --- !u!114 &114716331940539204
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -71,6 +71,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unit: {fileID: 1179102951306514, guid: fa16454d916af1141a8e03d5a2e19c96, type: 2}
+  neighbours: []
+  unitsContained:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  standingPoints:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
 --- !u!212 &212490473972239268
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -106,7 +115,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300006, guid: b012a35b06d71ab4d8e161a23d51916e, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.003921569}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

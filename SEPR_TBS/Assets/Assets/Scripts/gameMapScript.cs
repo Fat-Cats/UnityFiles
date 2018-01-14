@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 public class gameMapScript : MonoBehaviour
 {
-
+    public Transform attackCanvas; //stores canvas, which is passed to unit upon instantiation
     public Transform sector; //prefab for sector (neccessary to point unity to the correct prefab)
     public GameObject unit; //prefab for units (neccessary to point unity to the correct prefab)
     private List<GameObject> sectors = new List<GameObject>(); //list of all instances of the sector prefab
@@ -15,11 +16,31 @@ public class gameMapScript : MonoBehaviour
 
         set //when a new unit is selected, this code highlights that unit and un-highlights the previously selected unit
         {
+            if (value != null && _selectedUnit != null) //check if a new unit has been selected whilst another unit is selected
+            {
+                //if a unit has been selected, and an opponents unit is then selected then they will engage in battle (if they are in range of eachother)
+                if (_selectedUnit.GetComponent<unitScript>().owner != value.GetComponent<unitScript>().owner)
+                {
+                    //give that the selected unit can move to a newly clickd on enemy unit, battle commences 
+                    if ( _selectedUnit.GetComponent<unitScript>().canMoveTo().Contains(value.transform.parent.gameObject))
+                    {
+                        _selectedUnit.GetComponent<unitScript>().attackUnit(value); //previously selected unit attacks newly selected unit
+                    }
+                    else //if a unit has chosen to attack an out of range enemy unit, unselect that unit
+                    {
+                        selectedUnit = null; //unselect current unit
+                    }
+
+                    value = null;
+
+                }
+            }
+
             if (_selectedUnit != null) //if a unit has previously been selected, remove its borders before changing selectedUnit's value
             {
-                selectedUnit.gameObject.GetComponent<SpriteGlow.SpriteGlow>().OutlineWidth = 0; //remove old selected unit border
+                _selectedUnit.gameObject.GetComponent<SpriteGlow.SpriteGlow>().OutlineWidth = 0; //remove old selected unit border
 
-                foreach (GameObject sect in selectedUnit.GetComponent<unitScript>().canMoveTo()) //remove old selected unit's "can move to" indicators
+                foreach (GameObject sect in _selectedUnit.GetComponent<unitScript>().canMoveTo()) //remove old selected unit's "can move to" indicators
                 {
                     sect.gameObject.GetComponent<SpriteGlow.SpriteGlow>().OutlineWidth = 0;
                 }
@@ -41,7 +62,6 @@ public class gameMapScript : MonoBehaviour
         }
     }
 
-    // Use this for initialization
     void Start()
     {
 
@@ -55,14 +75,14 @@ public class gameMapScript : MonoBehaviour
             if (i == 0 || i == 1 || i == 2 || i == 4 || i == 5 || i == 6 || i == 8 || i == 11 || i == 12 || i == 14 || i == 15 || i == 16 || i == 17 || i == 20 || i == 24 || i == 25 || i == 26)
             {
                 //scale west sectors
-                float scaleFactor = 0.9183525f;
+                float scaleFactor = 0.99373699113f;
                 createdSector.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
             }
             else
             {
                 //scale east sectors
-                float scaleFactor = 0.8262805f;
-                createdSector.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
+                createdSector.localScale = new Vector3(0.73697657572f, 0.66770329348f, 0.71634995268f);
+                createdSector.Rotate(new Vector3(-12.388f, -12.388f, -12.388f));
             }
 
             createdSector.transform.SetParent(this.gameObject.transform); //set gameMap as the parent to all sectors
@@ -81,10 +101,12 @@ public class gameMapScript : MonoBehaviour
         }
 
         //create 3 basic units for testing
-        Instantiate(unit, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<unitScript>().Init("Basic", GetComponentInParent<gameMainScript>().playerList[1], sectors[4]);
-        Instantiate(unit, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<unitScript>().Init("Basic", GetComponentInParent<gameMainScript>().playerList[0], sectors[4]);
-        Instantiate(unit, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<unitScript>().Init("Basic", GetComponentInParent<gameMainScript>().playerList[0], sectors[4]);
-        Instantiate(unit, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<unitScript>().Init("Basic", GetComponentInParent<gameMainScript>().playerList[0], sectors[18]);
+        Instantiate(unit, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<unitScript>().Init("Basic", GetComponentInParent<gameMainScript>().playerList[1], sectors[1], attackCanvas);
+        Instantiate(unit, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<unitScript>().Init("Basic", GetComponentInParent<gameMainScript>().playerList[0], sectors[3], attackCanvas);
+        Instantiate(unit, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<unitScript>().Init("Basic", GetComponentInParent<gameMainScript>().playerList[0], sectors[4], attackCanvas);
+        Instantiate(unit, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<unitScript>().Init("Basic", GetComponentInParent<gameMainScript>().playerList[0], sectors[17], attackCanvas);
+
+        attackCanvas.gameObject.SetActive(false); //make canvas not visible (will be made visible during battles)
     }
 
 
@@ -283,45 +305,40 @@ public class gameMapScript : MonoBehaviour
 
         switch (sectorID) //The locations for the sectors were originally hand placed and then their positions were recorded below
         {
-            case 1: coordsToReturn = new Vector3(-10.235f, 4.892f, 0); break;
-            case 2: coordsToReturn = new Vector3(-6.789f, 5.195f, 0); break;
-            case 3: coordsToReturn = new Vector3(7.785001f, -0.362f, 0); break;
-            case 4: coordsToReturn = new Vector3(-13.635f, -0.548f, 0); break;
-            case 5: coordsToReturn = new Vector3(-7.599f, 1.705f, 0); break;
-            case 6: coordsToReturn = new Vector3(-11.214f, 2.909f, 0); break;
-            case 7: coordsToReturn = new Vector3(12.364f, -1.072f, 0); break;
-            case 8: coordsToReturn = new Vector3(-12.251f, -1.065f, 0); break;
-            case 9: coordsToReturn = new Vector3(1.036f, -2.44f, 0); break;
-            case 10: coordsToReturn = new Vector3(4.886f, -3.818f, 0); break;
-            case 11: coordsToReturn = new Vector3(-9.39f, -4.264f, 0); break;
-            case 12: coordsToReturn = new Vector3(-7.858f, -2.541f, 0); break;
-            case 13: coordsToReturn = new Vector3(12.841f, 1.158f, 0); break;
-            case 14: coordsToReturn = new Vector3(-13.252f, 1.896f, 0); break;
-            case 15: coordsToReturn = new Vector3(-9.423f, 2.043f, 0); break;
-            case 16: coordsToReturn = new Vector3(-6.203f, 3.529f, 0); break;
-            case 17: coordsToReturn = new Vector3(-8.782f, 4.734f, 0); break;
-            case 18: coordsToReturn = new Vector3(3.428f, -1.822f, 0); break;
-            case 19: coordsToReturn = new Vector3(5.13f, -0.9400001f, 0); break;
-            case 20: coordsToReturn = new Vector3(-9.446f, -1.043f, 0); break;
-            case 21: coordsToReturn = new Vector3(10.175f, 0.985f, 0); break;
-            case 22: coordsToReturn = new Vector3(10.398f, -0.6570001f, 0); break;
-            case 23: coordsToReturn = new Vector3(13.61f, -0.6670001f, 0); break;
-            case 24: coordsToReturn = new Vector3(-11.541f, -2.473f, 0); break;
-            case 25: coordsToReturn = new Vector3(-6.609f, -4.489f, 0); break;
-            case 26: coordsToReturn = new Vector3(-11.428f, 0.01499999f, 0); break;
-            case 27: coordsToReturn = new Vector3(1.452f, -4.629f, 0); break;
-            case 28: coordsToReturn = new Vector3(7.065001f, -3.139f, 0); break;
-            case 29: coordsToReturn = new Vector3(2.505f, -3.605f, 0); break;
-            case 30: coordsToReturn = new Vector3(10.064f, -2.673f, 0); break;
-            case 0: coordsToReturn = new Vector3(-13.613f, 3.799f, 0); break;
+            case 0: coordsToReturn = new Vector3(-11.93744f, 4.767906f, 0); break;
+            case 1: coordsToReturn = new Vector3(-8.186342f, 5.209211f, 0); break;
+            case 2: coordsToReturn = new Vector3(-4.391114f, 5.54019f, 0); break;
+            case 3: coordsToReturn = new Vector3(6.886451f, 2.285561f, 0); break;
+            case 4: coordsToReturn = new Vector3(-11.91537f, 0.06800067f, 0); break;
+            case 5: coordsToReturn = new Vector3(-5.414943f, 2.411334f, 0); break;
+            case 6: coordsToReturn = new Vector3(-9.444064f, 3.797033f, 0); break;
+            case 7: coordsToReturn = new Vector3(10.75229f, 0.851318f, 0); break;
+            case 8: coordsToReturn = new Vector3(-10.437f, -0.5277619f, 0); break;
+            case 9: coordsToReturn = new Vector3(0.6463891f, 1.93693f, 0); break;
+            case 10: coordsToReturn = new Vector3(3.662713f, 0.1562618f, 0); break;
+            case 11: coordsToReturn = new Vector3(-8.387136f, -4.375947f, 0); break;
+            case 12: coordsToReturn = new Vector3(-6.730034f, -2.513637f, 0); break;
+            case 13: coordsToReturn = new Vector3(11.55326f, 2.519453f, 0); break;
+            case 14: coordsToReturn = new Vector3(-11.60646f, 2.715834f, 0); break;
+            case 15: coordsToReturn = new Vector3(-7.480254f, 2.870291f, 0); break;
+            case 16: coordsToReturn = new Vector3(-3.662961f, 3.752903f, 0); break;
+            case 17: coordsToReturn = new Vector3(-6.531446f, 4.966493f, 0); break;
+            case 18: coordsToReturn = new Vector3(2.837471f, 1.967821f, 0); break;
+            case 19: coordsToReturn = new Vector3(4.474716f, 2.338518f, 0); break;
+            case 20: coordsToReturn = new Vector3(-7.403026f, -0.4174355f, 0); break;
+            case 21: coordsToReturn = new Vector3(9.201098f, 2.892356f, 0); break;
+            case 22: coordsToReturn = new Vector3(9.11063f, 1.552994f, 0); break;
+            case 23: coordsToReturn = new Vector3(11.9063f, 0.930753f, 0); break;
+            case 24: coordsToReturn = new Vector3(-9.669129f, -2.050266f, 0); break;
+            case 25: coordsToReturn = new Vector3(-5.377432f, -4.620871f, 0); break;
+            case 26: coordsToReturn = new Vector3(-9.547771f, 0.6416981f, 0); break;
+            case 27: coordsToReturn = new Vector3(0.624324f, 0.1275768f, 0); break;
+            case 28: coordsToReturn = new Vector3(5.776567f, 0.2290771f, 0); break;
+            case 29: coordsToReturn = new Vector3(1.676838f, 0.7740896f, 0); break;
+            case 30: coordsToReturn = new Vector3(8.470737f, 0.0260765f, 0); break;
         }
 
         return coordsToReturn;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 }

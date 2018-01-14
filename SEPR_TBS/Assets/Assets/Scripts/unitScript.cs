@@ -2,65 +2,31 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using System;
+
 public class unitScript : MonoBehaviour {
 
     public player owner; //class player that owns this unit
     public string unitType; //a string representing this unit's class ("Basic", "Jock"...)
     public int uid; //unique unit identifier
-    
+    public Transform attackCanvas; //Used to link canvas, which is displayed during unit battling (handled in "attackUnit")
+
     //unit's statistics (these change according to a units class)
-    private int maxHP; //units maximum hp
-    private int attack; //units attack points, used to calculate damage done in battle
-    private int defence; //units defense points, used to calculate hp loss in battle
-    private double accuracy; //units accuracy points, used to calculate damage done in battle
-    private double critical; //units critical points, used to calculate damage done in battle
-    private int speed; //units speed points, indicates how many tiles a unit can move in 1 turn
-    private string special; //units special attack
+    public int maxHP; //units maximum hp
+    public int attack; //units attack points, used to calculate damage done in battle
+    public int defence; //units defense points, used to calculate hp loss in battle
+    public double accuracy; //units accuracy points, used to calculate damage done in battle
+    public double critical; //units critical points, used to calculate damage done in battle
+    public int speed; //units speed points, indicates how many tiles a unit can move in 1 turn
+    public string special; //units special attack
+
     public int curHP; //units current health points
+    public int currentSpeed; //units remaining moves in a turnm
 
     void OnMouseDown() //called when the user clicks on this gameObject
     {
         GameObject theGameMap = GameObject.Find("gameMap"); //switch selected unit variable (stored in gameMap) to this unit
-        theGameMap.GetComponent<gameMapScript>().selectedUnit = this.gameObject; 
-    }
-
-    public int GetCurHP()
-    {
-        return curHP;
-    } 
-
-    public int GetAttack()
-    {
-        return attack;
-    }
-
-    public int GetDefence()
-    {
-        return defence;
-    }
-
-    public double GetAccuracy()
-    {
-        return accuracy;
-    }
-
-    public double GetCritical()
-    {
-        return critical;
-    }
-
-    public int GetSpeed()
-    {
-        return speed;
-    }
-    public void Damage(int damage)
-    {      
-        curHP = curHP - damage;     
-    }
-
-    public void Kill()
-    {
-
+        theGameMap.GetComponent<gameMapScript>().selectedUnit = this.gameObject;
     }
 
     public List<GameObject> canMoveTo() //return a list of sectors that a unit can move to. This function uses a recursive function "canMoveToRecursive" to calculate which sectors 
@@ -68,7 +34,7 @@ public class unitScript : MonoBehaviour {
 
         List<GameObject> canMoveToSectors = new List<GameObject>(); //create list used to store which sectors a unit can move to
 
-        HashSet<GameObject> sectorsThatCanBeMovedTo = canMoveToRecursive(new HashSet<GameObject>(), this.speed); //use "canMoveToRecursive" to retrieve HashSet of sectors
+        HashSet<GameObject> sectorsThatCanBeMovedTo = canMoveToRecursive(new HashSet<GameObject>(), this.currentSpeed); //use "canMoveToRecursive" to retrieve HashSet of sectors
                                                                                                                  //that can be moved to by this unit. A hashset is used as it
                                                                                                                  //does not allow duplication of elements. This means that I do not
                                                                                                                  //need to micromanage the elements it returns
@@ -100,16 +66,16 @@ public class unitScript : MonoBehaviour {
 
                     for (int i = 0; i < 3; i++) //check each value stored in this sector's "unitsContained" array
                     {
-                        if (newNeighbour.gameObject.GetComponentInParent<sectorScript>().unitsContained[i] == null ) //if this array contains a null value (I.E: free space) it can be moved to
+                        //if (newNeighbour.gameObject.GetComponent<sectorScript>().unitsContained[i].GetComponent<unitScript>().owner != this.owner)
+                        //{
+                        //    sectorIsAtCapacity = true;
+                        //    break;
+                        //} // used to stop 2 units from opposite teams moving into the same sector
+
+                        if (newNeighbour.gameObject.GetComponent<sectorScript>().unitsContained[i] == null) //(newNeighbour.gameObject.GetComponentInParent<sectorScript>().unitsContained[i] == null) //if this array contains a null value (I.E: free space) it can be moved to
                         {
                             sectorIsAtCapacity = false; //this sector can be moved to as it has free spaces
                         }
-                        /*else if (this.gameObject.GetComponentInParent<sectorScript>().unitsContained[i].GetComponent<unitScript>().owner != this.owner)
-                        {
-                            sectorIsAtCapacity = true; //this
-                            break;
-                        }*/ //was used to stop 2 units from opposite teams moving into the same sector but a unit should be able to move into the sector of an enemy, it will then
-                        //start a battle
                     }
 
                     if (!sectorIsAtCapacity) //if this sector can be moved to (if this sector is not full)
@@ -164,19 +130,22 @@ public class unitScript : MonoBehaviour {
 
     }
 
-    public void Init(string unitType, player owner, GameObject sector) //used to initilize values of units
+    public void attackUnit(GameObject unitToAttack) //This function is called when a player clicks on an enemy unit, to attack it
     {
+        attackCanvas.GetComponent<battleAnimationScript>().fightAnimation(this.gameObject, unitToAttack); //start battle animation
+    }
+
+    public void Init(string unitType, player owner, GameObject sector, Transform attackingCanvas) //used to initilize values of units
+    {
+        attackCanvas = attackingCanvas; //set attackCanvas to the canvas that plays when an attack is performed
+
         this.gameObject.AddComponent<PolygonCollider2D>(); //so that the unit can be clicked
         this.gameObject.AddComponent<SpriteGlow.SpriteGlow>(); //so that a border can be drawn around the unit when selected
+        this.gameObject.GetComponent<SpriteGlow.SpriteGlow>().OutlineWidth = 0; //otherwise unit spawns with unnecessary white border
         this.gameObject.GetComponent<SpriteGlow.SpriteGlow>().GlowBrightness = 5; //SpriteGlow settings used to assure borders can be drawn correctly
         this.gameObject.GetComponent<SpriteGlow.SpriteGlow>().AlphaThreshold = 0.5f; //SpriteGlow settings used to assure borders can be drawn correctly
 
-        gameMainScript gameManager = GameObject.Find("gameMain").GetComponent<gameMainScript>(); // access to gameManager
-
         this.moveUnit(sector);
-
-        uid = gameManager.unitList.Count; // PLACEHOLDER
-        gameManager.unitList.Add(this.gameObject); // PLACEHOLDER
 
         switch(unitType)
         {
@@ -227,11 +196,36 @@ public class unitScript : MonoBehaviour {
                 break;
         }
 
+        this.currentSpeed = this.speed;
+
         this.owner = owner; //set units owner
         this.unitType = unitType; //set unitType
         this.curHP = maxHP; //set current health points to maximum health points as this unit was just created
         this.gameObject.transform.SetParent(sector.gameObject.transform); //set this unit's parent to the sector it is placed in
 
         this.gameObject.GetComponent<SpriteRenderer>().sprite = Resources.LoadAll("scrub")[1] as Sprite ; //CHANGE ME to select appropriate sprite when art is done.
+
+        //this.transform.parent.gameObject.GetComponent<sectorScript>().containsUnitsOfPlayer = owner.playerName;
+    }
+
+    public void killIfDead()
+    {
+        if (this.curHP == 0) //if unit is dead, delete unit
+        {
+            GameObject[] containedUnits = this.transform.parent.gameObject.GetComponent<sectorScript>().unitsContained; //fetch list of units standing on
+                                                                                                                        //the sector that this unit is
+                                                                                                                        //standing on
+            
+            for (int positionIndex = 0; positionIndex < 3; positionIndex++) //cycle through units contained
+            {
+                if (containedUnits[positionIndex] == this.gameObject) //remove this unit from units contained when found
+                {
+                    this.transform.parent.gameObject.GetComponent<sectorScript>().unitsContained[positionIndex] = null;
+                    break;
+                }
+            }
+
+            Destroy(gameObject); //destroy this unit
+        }
     }
 }

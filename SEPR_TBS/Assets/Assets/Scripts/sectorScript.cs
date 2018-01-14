@@ -9,6 +9,8 @@ public class sectorScript : MonoBehaviour {
     public List<GameObject> neighbours = new List<GameObject>(); //stores a list of neighbouring sectors
     public GameObject[] unitsContained = new GameObject[3]; //stores all units currently placed in this sector [maximum: 3]
     public Vector3[] standingPoints = new Vector3[3]; //stores vectors representing locations for 3 units to stand in this sector
+    //public string containsUnitsOfPlayer; //This string is used to indicate which player has units positioned on this sector.
+                                         //This information is used to avoid units of opposite teams moving to the same sector.
 
     public player owner; //::::::::::::::::add getters and setters to change sectors as units move in and out of territories 
 
@@ -90,7 +92,11 @@ public class sectorScript : MonoBehaviour {
         for (int i = 0; i < 3; i++) //set all unitsContained values to null because no units should be placed until after a sector is created
         {
             unitsContained[i] = null;
+            
         }
+
+        //this.gameObject.GetComponent<SpriteGlow.SpriteGlow>().EnableInstancing = false;
+        //this.gameObject.GetComponent<SpriteGlow.SpriteGlow>().DrawOutside = true;
     }
 
     void OnMouseDown() //when the mouse clicks on this sector
@@ -103,6 +109,10 @@ public class sectorScript : MonoBehaviour {
 
             theGameMap.GetComponent<gameMapScript>().selectedUnit = null; //a sector has now been selected, so set the selectedUnit to null
             theSelectedUnit.GetComponent<unitScript>().moveUnit(this.gameObject); //move unit to this sector
+        }
+        else //else, the selected unit has been clicked off and is subsequently unset
+        {
+            theGameMap.GetComponent<gameMapScript>().selectedUnit = null;
         }
 
     }
