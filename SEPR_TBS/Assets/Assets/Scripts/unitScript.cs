@@ -9,7 +9,7 @@ public class unitScript : MonoBehaviour {
     public player owner; //class player that owns this unit
     public string unitType; //a string representing this unit's class ("Basic", "Jock"...)
     public int uid; //unique unit identifier
-    public Transform attackCanvas; //Used to link canvas, which is displayed during unit battling (handled in "attackUnit")
+    public GameObject attackCanvas; //Used to link canvas, which is displayed during unit battling (handled in "attackUnit")
 
     //unit's statistics (these change according to a units class)
     public int maxHP; //units maximum hp
@@ -96,10 +96,6 @@ public class unitScript : MonoBehaviour {
 
     public void moveUnit(GameObject destinationSector) //function to move a unit from its current position to a new sector
     {
-        //GameObject theGameMap = GameObject.Find("gameMap"); //check to see if a unit has been moved to this sector
-        //theGameMap.GetComponent<gameMapCode>().selectedUnit = null; //a sector has now been selected, so set the selectedUnit to null
-        //was used to set selectedUnit to null but it probably not neccessary as this is handled when a sector is clicked
-
         for (int i = 0; i < 3; i++) //cyle through current sector's unitsContained array to free up space (as this unit is moving)
         {
             if (this.gameObject.transform.parent != null) //if unit has already been placed (might not have been as this function is used to move freshly instantiated units)
@@ -114,7 +110,7 @@ public class unitScript : MonoBehaviour {
 
         this.gameObject.transform.SetParent(destinationSector.gameObject.transform); //change units owner
 
-        Vector3 currentPosition = new Vector3(); //create new vector to store new unti coordinates before applying them to unit
+        Vector3 currentPosition = new Vector3(); //create new vector to store new unit coordinates before applying them to unit
 
         for (int i = 0; i < 3; i++) //find free standingPoint to move to in destination sector 
         {
@@ -135,9 +131,11 @@ public class unitScript : MonoBehaviour {
         attackCanvas.GetComponent<battleAnimationScript>().fightAnimation(this.gameObject, unitToAttack); //start battle animation
     }
 
-    public void Init(string unitType, player owner, GameObject sector, Transform attackingCanvas) //used to initilize values of units
+    public void Init(string unitType, player owner, GameObject sector, GameObject fightCanvas) //used to initilize values of units
     {
-        attackCanvas = attackingCanvas; //set attackCanvas to the canvas that plays when an attack is performed
+        attackCanvas = fightCanvas; //grab a reference to the fight canvas gameObject
+
+        //attackCanvas = attackingCanvas; //set attackCanvas to the canvas that plays when an attack is performed
 
         this.gameObject.AddComponent<PolygonCollider2D>(); //so that the unit can be clicked
         this.gameObject.AddComponent<SpriteGlow.SpriteGlow>(); //so that a border can be drawn around the unit when selected

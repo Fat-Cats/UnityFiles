@@ -5,9 +5,11 @@ using System.IO;
 
 public class gameMapScript : MonoBehaviour
 {
-    public Transform attackCanvas; //stores canvas, which is passed to unit upon instantiation
+    public Transform attackCanvas; //stores canvas, which is passed to units and buildings upon instantiation
+    public Transform buyUnitMenu; //stores canvas, which is passed to units and buildings upon instantiation
     public Transform sector; //prefab for sector (neccessary to point unity to the correct prefab)
     public GameObject unit; //prefab for units (neccessary to point unity to the correct prefab)
+    public GameObject building; //prefab for buildings (neccessary to point unity to the correct prefab)
     private List<GameObject> sectors = new List<GameObject>(); //list of all instances of the sector prefab
     private GameObject _selectedUnit; //needed to store intermediate values during getter and setter use
     public GameObject selectedUnit //this variable stores the last unit that has been clicked on by a player
@@ -100,13 +102,25 @@ public class gameMapScript : MonoBehaviour
                                                                                          //which returns a list of neighbours according to sectorID's 
         }
 
+        //instantiate and place buildings
+        
+        Instantiate(building, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<buildingScript>().Init("CentralHall", sectors[15], buyUnitMenu.gameObject, attackCanvas.gameObject );
+        Instantiate(building, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<buildingScript>().Init("HesHall", sectors[20], buyUnitMenu.gameObject, attackCanvas.gameObject); 
+        Instantiate(building, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<buildingScript>().Init("JBMorrell", sectors[17], buyUnitMenu.gameObject, attackCanvas.gameObject); 
+        Instantiate(building, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<buildingScript>().Init("Nisa", sectors[6], buyUnitMenu.gameObject, attackCanvas.gameObject);
+        Instantiate(building, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<buildingScript>().Init("RCH", sectors[10], buyUnitMenu.gameObject, attackCanvas.gameObject);
+        Instantiate(building, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<buildingScript>().Init("SportsVillage", sectors[13], buyUnitMenu.gameObject, attackCanvas.gameObject);
+        Instantiate(building, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<buildingScript>().Init("track", sectors[24], buyUnitMenu.gameObject, attackCanvas.gameObject);
+        Instantiate(building, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<buildingScript>().Init("Nisa", sectors[25], buyUnitMenu.gameObject, attackCanvas.gameObject);
+
         //create 3 basic units for testing
-        Instantiate(unit, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<unitScript>().Init("Basic", GetComponentInParent<gameMainScript>().playerList[1], sectors[1], attackCanvas);
-        Instantiate(unit, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<unitScript>().Init("Basic", GetComponentInParent<gameMainScript>().playerList[0], sectors[3], attackCanvas);
-        Instantiate(unit, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<unitScript>().Init("Basic", GetComponentInParent<gameMainScript>().playerList[0], sectors[4], attackCanvas);
-        Instantiate(unit, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<unitScript>().Init("Basic", GetComponentInParent<gameMainScript>().playerList[0], sectors[17], attackCanvas);
+        Instantiate(unit, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<unitScript>().Init("Basic", GetComponentInParent<gameMainScript>().playerList[1], sectors[1], attackCanvas.gameObject);
+        Instantiate(unit, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<unitScript>().Init("Basic", GetComponentInParent<gameMainScript>().playerList[0], sectors[3], attackCanvas.gameObject);
+        Instantiate(unit, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<unitScript>().Init("Basic", GetComponentInParent<gameMainScript>().playerList[0], sectors[4], attackCanvas.gameObject);
+        Instantiate(unit, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<unitScript>().Init("Basic", GetComponentInParent<gameMainScript>().playerList[0], sectors[17], attackCanvas.gameObject);
 
         attackCanvas.gameObject.SetActive(false); //make canvas not visible (will be made visible during battles)
+        buyUnitMenu.gameObject.SetActive(false);
     }
 
 

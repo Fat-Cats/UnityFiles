@@ -9,8 +9,6 @@ public class sectorScript : MonoBehaviour {
     public List<GameObject> neighbours = new List<GameObject>(); //stores a list of neighbouring sectors
     public GameObject[] unitsContained = new GameObject[3]; //stores all units currently placed in this sector [maximum: 3]
     public Vector3[] standingPoints = new Vector3[3]; //stores vectors representing locations for 3 units to stand in this sector
-    //public string containsUnitsOfPlayer; //This string is used to indicate which player has units positioned on this sector.
-                                         //This information is used to avoid units of opposite teams moving to the same sector.
 
     public player owner; //::::::::::::::::add getters and setters to change sectors as units move in and out of territories 
 
@@ -18,7 +16,6 @@ public class sectorScript : MonoBehaviour {
     {
         Object[] sectorSprites = Resources.LoadAll("mapSectors"); //load all mapSectorSprites 
         this.gameObject.GetComponent<SpriteRenderer>().sprite = (Sprite)sectorSprites[sectorID + 1]; //set current sprite to appropriate sector as indicated by sectorID 
-                                                                                           //"mapSectors_" + sectorID.toString()
 
         this.gameObject.AddComponent<PolygonCollider2D>(); //add polygoncollider component to this sector so that it can be clicked by the user
 
@@ -95,8 +92,6 @@ public class sectorScript : MonoBehaviour {
             
         }
 
-        //this.gameObject.GetComponent<SpriteGlow.SpriteGlow>().EnableInstancing = false;
-        //this.gameObject.GetComponent<SpriteGlow.SpriteGlow>().DrawOutside = true;
     }
 
     void OnMouseDown() //when the mouse clicks on this sector
