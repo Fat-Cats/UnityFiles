@@ -5,44 +5,57 @@ using System.IO;
 
 public class gameMapScript : MonoBehaviour
 {
-    public Transform attackCanvas; //stores canvas, which is passed to units and buildings upon instantiation
-    public Transform buyUnitMenu; //stores canvas, which is passed to units and buildings upon instantiation
-    public Transform sector; //prefab for sector (neccessary to point unity to the correct prefab)
-    public GameObject unit; //prefab for units (neccessary to point unity to the correct prefab)
-    public GameObject building; //prefab for buildings (neccessary to point unity to the correct prefab)
-    private List<GameObject> sectors = new List<GameObject>(); //list of all instances of the sector prefab
+    public Transform fightCanvas; //references the "fightCanvas" canvas, which is used to display battles between units (set in the unity editor)
+    public Transform buyUnitCanvas; //references the "buyUnitCanvas" canvas, which is used to purchase units (set in the unity editor)
+
+    public Transform sector; //prefab for sector used to instantiate sectors (set in the unity editor)
+    public GameObject unit; //prefab for unit used to instantiate units (set in the unity editor)
+    public GameObject building; //prefab for unit used to instantiate units (set in the unity editor)
+
+    public List<GameObject> sectors = new List<GameObject>(); //lists all sectors in the game 
     private GameObject _selectedUnit; //needed to store intermediate values during getter and setter use
-    public GameObject selectedUnit //this variable stores the last unit that has been clicked on by a player
+    public GameObject selectedUnit //this variable stores the last unit that has been clicked on (selected) by a player
     {
         get { return this._selectedUnit; } //return selectedUnit value when requested
 
         set //when a new unit is selected, this code highlights that unit and un-highlights the previously selected unit
-        {
+        {   //this setter also detects when 2 units have been selected at the same time and, if both units are not on the same team, start a battle
+
+            unitScript _selectedUnitScript; //this is used to store the _selectedUnit's unitScript (so that ".getComponent..." does not need to be used at every reference)
+            unitScript valueUnitScript; //this is used to store the value's unitScript 
+            SpriteGlow.SpriteGlow _selectedGlowScript; //this is used to store the _selectedUnit's SpriteGlow script 
+
             if (value != null && _selectedUnit != null) //check if a new unit has been selected whilst another unit is selected
             {
+                _selectedUnitScript = _selectedUnit.GetComponent<unitScript>(); //if the old selected unit (_selectedUnit) is not null, set its unitScript
+                valueUnitScript = value.GetComponent<unitScript>(); //if the newly selected unit (value) is not null, set its unitScript
+
                 //if a unit has been selected, and an opponents unit is then selected then they will engage in battle (if they are in range of eachother)
-                if (_selectedUnit.GetComponent<unitScript>().owner != value.GetComponent<unitScript>().owner)
+                if (_selectedUnitScript.owner != valueUnitScript.owner)
                 {
-                    //give that the selected unit can move to a newly clickd on enemy unit, battle commences 
-                    if ( _selectedUnit.GetComponent<unitScript>().canMoveTo().Contains(value.transform.parent.gameObject))
+                    //given that the selected unit can move to a newly selected enemy unit, battle commences 
+                    if (_selectedUnitScript.canMoveTo().Contains(valueUnitScript.sectorStandingOn))
                     {
-                        _selectedUnit.GetComponent<unitScript>().attackUnit(value); //previously selected unit attacks newly selected unit
+                        _selectedUnitScript.attackUnit(value); //previously selected unit attacks newly selected unit
                     }
                     else //if a unit has chosen to attack an out of range enemy unit, unselect that unit
                     {
                         selectedUnit = null; //unselect current unit
+                        Debug.Log("that unit is out of range");
                     }
 
-                    value = null;
-
+                    value = null; //new value is set to null, so that whether or not a battle takes place both units are unselected
                 }
             }
 
             if (_selectedUnit != null) //if a unit has previously been selected, remove its borders before changing selectedUnit's value
             {
-                _selectedUnit.gameObject.GetComponent<SpriteGlow.SpriteGlow>().OutlineWidth = 0; //remove old selected unit border
+                _selectedUnitScript = _selectedUnit.GetComponent<unitScript>(); //if the old selected unit (_selectedUnit) is not null, set its unitScript
+                _selectedGlowScript = _selectedUnit.GetComponent<SpriteGlow.SpriteGlow>(); //if the old selected unit (_selectedUnit) is not null, set its SpriteGlow script
 
-                foreach (GameObject sect in _selectedUnit.GetComponent<unitScript>().canMoveTo()) //remove old selected unit's "can move to" indicators
+                _selectedGlowScript.OutlineWidth = 0; //remove old selected unit border
+
+                foreach (GameObject sect in _selectedUnitScript.canMoveTo()) //remove old selected unit's "can move to" indicators
                 {
                     sect.gameObject.GetComponent<SpriteGlow.SpriteGlow>().OutlineWidth = 0;
                 }
@@ -50,15 +63,18 @@ public class gameMapScript : MonoBehaviour
 
             _selectedUnit = value; //set new selectedUnit value
 
-            if (selectedUnit != null) //if the new unit is not null, highlight it and the sectors to which it can move
+            if (_selectedUnit != null) //if the new unit is not null, highlight it and the sectors to which it can move
             {
-                selectedUnit.gameObject.GetComponent<SpriteGlow.SpriteGlow>().OutlineWidth = 3; //draw border around unit
-                selectedUnit.gameObject.GetComponent<SpriteGlow.SpriteGlow>().GlowColor = selectedUnit.gameObject.GetComponent<unitScript>().owner.teamColour; //color unit's border using it's team's colour
+                _selectedUnitScript = _selectedUnit.GetComponent<unitScript>(); //if the newly selected unit (_selectedUnit) is not null, set its unitScript
+                _selectedGlowScript = _selectedUnit.GetComponent<SpriteGlow.SpriteGlow>(); //if the newly selected unit (_selectedUnit) is not null, set its SpriteGlow script
+
+                _selectedGlowScript.OutlineWidth = 3; //draw border around unit
+                _selectedGlowScript.GlowColor = _selectedUnitScript.owner.teamColour; //color unit's border using it's team's colour
 
                 foreach (GameObject sect in selectedUnit.GetComponent<unitScript>().canMoveTo()) //add new selected unit's "can move to" indicators
                 {
                     sect.gameObject.GetComponent<SpriteGlow.SpriteGlow>().OutlineWidth = 3;
-                    sect.gameObject.GetComponent<SpriteGlow.SpriteGlow>().GlowColor = selectedUnit.gameObject.GetComponent<unitScript>().owner.teamColour;
+                    sect.gameObject.GetComponent<SpriteGlow.SpriteGlow>().GlowColor = _selectedUnitScript.owner.teamColour;
                 }
             }
         }
@@ -69,290 +85,63 @@ public class gameMapScript : MonoBehaviour
 
         for (int i = 0; i <= 30; i++) //instantiate 30 sector prefabs, set relevant x and y positions on the map and assign appropriate sectorID's
         {
-            Transform createdSector = Instantiate(sector, getSectorCoordinates(i), Quaternion.identity); //instantiate new sector and set its position according to
-                                                                                                         //"getSectorCoordinates(i)" which stores sector positions
-                                                                                                         //according to sectorID's
+            Transform createdSector = Instantiate(sector, new Vector3(0, 0, 0), Quaternion.identity); //instantiate new sector and set its position according to
+                                                                                                      //"getSectorCoordinates(i)" which stores sector positions
+                                                                                                      //according to sectorID's
 
-            //scale sectors depending on their sector ID (sectors on east and west are scaled differently than in original artwork)
-            if (i == 0 || i == 1 || i == 2 || i == 4 || i == 5 || i == 6 || i == 8 || i == 11 || i == 12 || i == 14 || i == 15 || i == 16 || i == 17 || i == 20 || i == 24 || i == 25 || i == 26)
-            {
-                //scale west sectors
-                float scaleFactor = 0.99373699113f;
-                createdSector.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
-            }
-            else
-            {
-                //scale east sectors
-                createdSector.localScale = new Vector3(0.73697657572f, 0.66770329348f, 0.71634995268f);
-                createdSector.Rotate(new Vector3(-12.388f, -12.388f, -12.388f));
-            }
-
-            createdSector.transform.SetParent(this.gameObject.transform); //set gameMap as the parent to all sectors
-
-            createdSector.GetComponent<sectorScript>().init(i); //perform additional initilization of sector (pass sectorID, choose sector sprite etc...)
+            createdSector.GetComponent<sectorScript>().init(i, this.gameObject); //perform additional initilization of sector (choose sector sprite, specify/set standing points etc...)
+            //"this.gameObject" is passed so that each sector can make a reference of the gameMap script, so that it can do things like access the "sectors" list
 
             sectors.Add(createdSector.gameObject); //add this sector to list of sectors stored in gameMapCode
+
         }
 
-        this.selectedUnit = null; //at the start of the game, no units are selected
+        foreach (GameObject sector in sectors) //now all sectors have been created, loop through them again and add a list of neighbours to each (this has to be done after
+        {                                      //all sectors have been created or references to sectors that do not yet exist may be used as neighbours)
 
-        for (int i = 0; i <= 30; i++) //now all sectors have been created, loop through them again and add a list of neighbours to each of them
-        {
-            sectors[i].GetComponent<sectorScript>().neighbours = getSectorNeighbours(i); //set sector neighbours according to "getSectorCoordinates(i)"
-                                                                                         //which returns a list of neighbours according to sectorID's 
+            sector.GetComponent<sectorScript>().setSectorNeighbours(); //set sector neighbours according to "setSectorNeighbours()"
+                                                                       //which sets a sectors neighbour list according to it's sectorID
         }
 
         //instantiate and place buildings
-        
-        Instantiate(building, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<buildingScript>().Init("CentralHall", sectors[15], buyUnitMenu.gameObject, attackCanvas.gameObject );
-        Instantiate(building, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<buildingScript>().Init("HesHall", sectors[20], buyUnitMenu.gameObject, attackCanvas.gameObject); 
-        Instantiate(building, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<buildingScript>().Init("JBMorrell", sectors[17], buyUnitMenu.gameObject, attackCanvas.gameObject); 
-        Instantiate(building, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<buildingScript>().Init("Nisa", sectors[6], buyUnitMenu.gameObject, attackCanvas.gameObject);
-        Instantiate(building, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<buildingScript>().Init("RCH", sectors[10], buyUnitMenu.gameObject, attackCanvas.gameObject);
-        Instantiate(building, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<buildingScript>().Init("SportsVillage", sectors[13], buyUnitMenu.gameObject, attackCanvas.gameObject);
-        Instantiate(building, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<buildingScript>().Init("track", sectors[24], buyUnitMenu.gameObject, attackCanvas.gameObject);
-        Instantiate(building, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<buildingScript>().Init("Nisa", sectors[25], buyUnitMenu.gameObject, attackCanvas.gameObject);
+        createBuilding("CentralHall", sectors[15]);
+        createBuilding("HesHall", sectors[20]);
+        createBuilding("JBMorrell", sectors[17]);
+        createBuilding("Nisa", sectors[6]);
+        createBuilding("RCH", sectors[10]);
+        createBuilding("SportsVillage", sectors[13]);
+        createBuilding("track", sectors[24]);
+        createBuilding("Nisa", sectors[25]);
+        //need to place vice chancelor, as a building, randomly at the start of each game
 
-        //create 3 basic units for testing
-        Instantiate(unit, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<unitScript>().Init("Basic", GetComponentInParent<gameMainScript>().playerList[1], sectors[1], attackCanvas.gameObject);
-        Instantiate(unit, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<unitScript>().Init("Basic", GetComponentInParent<gameMainScript>().playerList[0], sectors[3], attackCanvas.gameObject);
-        Instantiate(unit, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<unitScript>().Init("Basic", GetComponentInParent<gameMainScript>().playerList[0], sectors[4], attackCanvas.gameObject);
-        Instantiate(unit, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<unitScript>().Init("Basic", GetComponentInParent<gameMainScript>().playerList[0], sectors[17], attackCanvas.gameObject);
+        //create units for testing
+        createUnit("Basic", GetComponentInParent<gameMainScript>().playerList[0], sectors[0]);
+        createUnit("Basic", GetComponentInParent<gameMainScript>().playerList[1], sectors[1]);
+        createUnit("Basic", GetComponentInParent<gameMainScript>().playerList[2], sectors[2]);
+        createUnit("Basic", GetComponentInParent<gameMainScript>().playerList[3], sectors[3]);
+        createUnit("Basic", GetComponentInParent<gameMainScript>().playerList[4], sectors[4]);
+        createUnit("Basic", GetComponentInParent<gameMainScript>().playerList[5], sectors[5]);
+        createUnit("Basic", GetComponentInParent<gameMainScript>().playerList[6], sectors[6]);
+        createUnit("Basic", GetComponentInParent<gameMainScript>().playerList[7], sectors[7]);
+        createUnit("Basic", GetComponentInParent<gameMainScript>().playerList[8], sectors[8]);
 
-        attackCanvas.gameObject.SetActive(false); //make canvas not visible (will be made visible during battles)
-        buyUnitMenu.gameObject.SetActive(false);
+        this.selectedUnit = null; //at the start of the game, no units are selected
+
+        fightCanvas.gameObject.SetActive(false); //make fight canvas not visible at start of game (will be made visible during battles)
+        buyUnitCanvas.gameObject.SetActive(false); //make unit buying canvas not visible at start of game (will be made visible when a building is clicked)
+        buyUnitCanvas.GetComponent<unitCanvasScript>().warningMessage.gameObject.SetActive(false);
     }
 
-
-    List<GameObject> getSectorNeighbours(int sectorID) //returns a list of all neighbour sectors of a given sector
+    public void createUnit(string unitType, player owner, GameObject sectorToSpawn) //this function creates a unit of type "unitType" at "sectorToSpawn" and sets it's owner to "owner"
     {
-        List<GameObject> neighbouringSectors = new List<GameObject>(); //use list to store neighbouring sectors
-
-        switch (sectorID) //hardcoded neighbour sectors
-        {
-            case 0:
-                neighbouringSectors.Add(sectors[14]);
-                neighbouringSectors.Add(sectors[6]);
-                break;
-            case 1:
-                neighbouringSectors.Add(sectors[17]);
-                break;
-            case 2:
-                neighbouringSectors.Add(sectors[17]);
-                neighbouringSectors.Add(sectors[16]);
-                break;
-            case 3:
-                neighbouringSectors.Add(sectors[19]);
-                neighbouringSectors.Add(sectors[28]);
-                neighbouringSectors.Add(sectors[30]);
-                neighbouringSectors.Add(sectors[22]);
-                neighbouringSectors.Add(sectors[21]);
-                break;
-            case 4:
-                neighbouringSectors.Add(sectors[14]);
-                neighbouringSectors.Add(sectors[8]);
-                break;
-            case 5:
-                neighbouringSectors.Add(sectors[15]);
-                neighbouringSectors.Add(sectors[20]);
-                break;
-            case 6:
-                neighbouringSectors.Add(sectors[0]);
-                neighbouringSectors.Add(sectors[14]);
-                neighbouringSectors.Add(sectors[26]);
-                neighbouringSectors.Add(sectors[15]);
-                break;
-            case 7:
-                neighbouringSectors.Add(sectors[30]);
-                neighbouringSectors.Add(sectors[22]);
-                neighbouringSectors.Add(sectors[13]);
-                neighbouringSectors.Add(sectors[23]);
-                break;
-            case 8:
-                neighbouringSectors.Add(sectors[4]);
-                neighbouringSectors.Add(sectors[26]);
-                neighbouringSectors.Add(sectors[24]);
-                break;
-            case 9:
-                neighbouringSectors.Add(sectors[27]);
-                neighbouringSectors.Add(sectors[29]);
-                neighbouringSectors.Add(sectors[18]);
-                break;
-            case 10:
-                neighbouringSectors.Add(sectors[29]);
-                neighbouringSectors.Add(sectors[18]);
-                neighbouringSectors.Add(sectors[19]);
-                neighbouringSectors.Add(sectors[16]);
-                neighbouringSectors.Add(sectors[20]);
-                neighbouringSectors.Add(sectors[28]);
-                neighbouringSectors.Add(sectors[13]);
-                break;
-            case 11:
-                neighbouringSectors.Add(sectors[24]);
-                neighbouringSectors.Add(sectors[12]);
-                neighbouringSectors.Add(sectors[25]);
-                break;
-            case 12:
-                neighbouringSectors.Add(sectors[25]);
-                neighbouringSectors.Add(sectors[11]);
-                neighbouringSectors.Add(sectors[20]);
-                break;
-            case 13:
-                neighbouringSectors.Add(sectors[16]);
-                neighbouringSectors.Add(sectors[20]);
-                neighbouringSectors.Add(sectors[10]);
-                neighbouringSectors.Add(sectors[28]);
-                neighbouringSectors.Add(sectors[21]);
-                neighbouringSectors.Add(sectors[7]);
-                neighbouringSectors.Add(sectors[23]);
-                break;
-            case 14:
-                neighbouringSectors.Add(sectors[0]);
-                neighbouringSectors.Add(sectors[6]);
-                neighbouringSectors.Add(sectors[4]);
-                break;
-            case 15:
-                neighbouringSectors.Add(sectors[6]);
-                neighbouringSectors.Add(sectors[5]);
-                neighbouringSectors.Add(sectors[17]);
-                break;
-            case 16:
-                neighbouringSectors.Add(sectors[17]);
-                neighbouringSectors.Add(sectors[2]);
-                neighbouringSectors.Add(sectors[20]);
-                neighbouringSectors.Add(sectors[10]);
-                neighbouringSectors.Add(sectors[28]);
-                neighbouringSectors.Add(sectors[13]);
-                break;
-            case 17:
-                neighbouringSectors.Add(sectors[1]);
-                neighbouringSectors.Add(sectors[2]);
-                neighbouringSectors.Add(sectors[16]);
-                neighbouringSectors.Add(sectors[15]);
-                break;
-            case 18:
-                neighbouringSectors.Add(sectors[9]);
-                neighbouringSectors.Add(sectors[29]);
-                neighbouringSectors.Add(sectors[10]);
-                neighbouringSectors.Add(sectors[19]);
-                break;
-            case 19:
-                neighbouringSectors.Add(sectors[18]);
-                neighbouringSectors.Add(sectors[10]);
-                neighbouringSectors.Add(sectors[28]);
-                neighbouringSectors.Add(sectors[3]);
-                break;
-            case 20:
-                neighbouringSectors.Add(sectors[16]);
-                neighbouringSectors.Add(sectors[10]);
-                neighbouringSectors.Add(sectors[28]);
-                neighbouringSectors.Add(sectors[13]);
-                neighbouringSectors.Add(sectors[24]);
-                neighbouringSectors.Add(sectors[26]);
-                neighbouringSectors.Add(sectors[5]);
-                neighbouringSectors.Add(sectors[12]);
-                break;
-            case 21:
-                neighbouringSectors.Add(sectors[3]);
-                neighbouringSectors.Add(sectors[22]);
-                neighbouringSectors.Add(sectors[13]);
-                break;
-            case 22:
-                neighbouringSectors.Add(sectors[3]);
-                neighbouringSectors.Add(sectors[21]);
-                neighbouringSectors.Add(sectors[7]);
-                neighbouringSectors.Add(sectors[30]);
-                break;
-            case 23:
-                neighbouringSectors.Add(sectors[7]);
-                neighbouringSectors.Add(sectors[13]);
-                break;
-            case 24:
-                neighbouringSectors.Add(sectors[8]);
-                neighbouringSectors.Add(sectors[26]);
-                neighbouringSectors.Add(sectors[20]);
-                neighbouringSectors.Add(sectors[11]);
-                break;
-            case 25:
-                neighbouringSectors.Add(sectors[12]);
-                neighbouringSectors.Add(sectors[11]);
-                break;
-            case 26:
-                neighbouringSectors.Add(sectors[8]);
-                neighbouringSectors.Add(sectors[24]);
-                neighbouringSectors.Add(sectors[20]);
-                neighbouringSectors.Add(sectors[6]);
-                break;
-            case 27:
-                neighbouringSectors.Add(sectors[9]);
-                neighbouringSectors.Add(sectors[29]);
-                break;
-            case 28:
-                neighbouringSectors.Add(sectors[16]);
-                neighbouringSectors.Add(sectors[20]);
-                neighbouringSectors.Add(sectors[13]);
-                neighbouringSectors.Add(sectors[10]);
-                neighbouringSectors.Add(sectors[19]);
-                neighbouringSectors.Add(sectors[3]);
-                neighbouringSectors.Add(sectors[30]);
-                break;
-            case 29:
-                neighbouringSectors.Add(sectors[27]);
-                neighbouringSectors.Add(sectors[9]);
-                neighbouringSectors.Add(sectors[18]);
-                neighbouringSectors.Add(sectors[10]);
-                break;
-            case 30:
-                neighbouringSectors.Add(sectors[28]);
-                neighbouringSectors.Add(sectors[3]);
-                neighbouringSectors.Add(sectors[22]);
-                neighbouringSectors.Add(sectors[7]);
-                break;
-        }
-
-        return neighbouringSectors;
+        GameObject newUnit =  Instantiate(unit, new Vector3(0, 0, 0), Quaternion.identity);  //instantate unit prefab
+        newUnit.GetComponent<unitScript>().Init(unitType, owner, sectorToSpawn, fightCanvas, this.gameObject); //perform unit initialization
+        //fight canvas is passed so that any unit can start playing the battle animation
     }
 
-    Vector3 getSectorCoordinates(int sectorID) //returns a vector representing the location of a sector specified by sectorID
+    private void createBuilding(string buildingType, GameObject sector) //this function creates a building of type "buildingType" at "sector"
     {
-        Vector3 coordsToReturn = new Vector3(0, 0, 0);
-
-        switch (sectorID) //The locations for the sectors were originally hand placed and then their positions were recorded below
-        {
-            case 0: coordsToReturn = new Vector3(-11.93744f, 4.767906f, 0); break;
-            case 1: coordsToReturn = new Vector3(-8.186342f, 5.209211f, 0); break;
-            case 2: coordsToReturn = new Vector3(-4.391114f, 5.54019f, 0); break;
-            case 3: coordsToReturn = new Vector3(6.886451f, 2.285561f, 0); break;
-            case 4: coordsToReturn = new Vector3(-11.91537f, 0.06800067f, 0); break;
-            case 5: coordsToReturn = new Vector3(-5.414943f, 2.411334f, 0); break;
-            case 6: coordsToReturn = new Vector3(-9.444064f, 3.797033f, 0); break;
-            case 7: coordsToReturn = new Vector3(10.75229f, 0.851318f, 0); break;
-            case 8: coordsToReturn = new Vector3(-10.437f, -0.5277619f, 0); break;
-            case 9: coordsToReturn = new Vector3(0.6463891f, 1.93693f, 0); break;
-            case 10: coordsToReturn = new Vector3(3.662713f, 0.1562618f, 0); break;
-            case 11: coordsToReturn = new Vector3(-8.387136f, -4.375947f, 0); break;
-            case 12: coordsToReturn = new Vector3(-6.730034f, -2.513637f, 0); break;
-            case 13: coordsToReturn = new Vector3(11.55326f, 2.519453f, 0); break;
-            case 14: coordsToReturn = new Vector3(-11.60646f, 2.715834f, 0); break;
-            case 15: coordsToReturn = new Vector3(-7.480254f, 2.870291f, 0); break;
-            case 16: coordsToReturn = new Vector3(-3.662961f, 3.752903f, 0); break;
-            case 17: coordsToReturn = new Vector3(-6.531446f, 4.966493f, 0); break;
-            case 18: coordsToReturn = new Vector3(2.837471f, 1.967821f, 0); break;
-            case 19: coordsToReturn = new Vector3(4.474716f, 2.338518f, 0); break;
-            case 20: coordsToReturn = new Vector3(-7.403026f, -0.4174355f, 0); break;
-            case 21: coordsToReturn = new Vector3(9.201098f, 2.892356f, 0); break;
-            case 22: coordsToReturn = new Vector3(9.11063f, 1.552994f, 0); break;
-            case 23: coordsToReturn = new Vector3(11.9063f, 0.930753f, 0); break;
-            case 24: coordsToReturn = new Vector3(-9.669129f, -2.050266f, 0); break;
-            case 25: coordsToReturn = new Vector3(-5.377432f, -4.620871f, 0); break;
-            case 26: coordsToReturn = new Vector3(-9.547771f, 0.6416981f, 0); break;
-            case 27: coordsToReturn = new Vector3(0.624324f, 0.1275768f, 0); break;
-            case 28: coordsToReturn = new Vector3(5.776567f, 0.2290771f, 0); break;
-            case 29: coordsToReturn = new Vector3(1.676838f, 0.7740896f, 0); break;
-            case 30: coordsToReturn = new Vector3(8.470737f, 0.0260765f, 0); break;
-        }
-
-        return coordsToReturn;
+        GameObject newBuilding = Instantiate(building, new Vector3(0, 0, 0), Quaternion.identity); //instantiate building prefab
+        newBuilding.GetComponent<buildingScript>().Init(buildingType, sector, this.buyUnitCanvas, this.gameObject); //perform building initialization
     }
-
 }

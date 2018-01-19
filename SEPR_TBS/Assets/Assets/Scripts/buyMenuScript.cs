@@ -5,39 +5,33 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 public class buyMenuScript : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler {
-    public Transform attackCanvas; //needed to instantiate unit
-    public Transform buyMenu;
-    public Transform gameMain;
-    public GameObject unit; //prefab for units (neccessary to point unity to the correct prefab)
 
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        GetComponent<Image>().color = new Color(0, 0, 0, 0.6f);
+    private Transform buyUnitCanvas; //reference to buyUnitCanvas
+    public string unitType; //this string represents the unit type that is spawned when this button is clicked. Set in the unity editor.
 
-        //GameObject buyMenu = GameObject.Find("buyUnitCanvas"); //grab a reference to the buyUnitCanvas gameObject
-        //GameObject gameMain = GameObject.Find("gameMain"); 
-        GameObject sectorToSpawn = buyMenu.GetComponent<unitCanvasScript>().spawnSector;
-        Instantiate(unit, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<unitScript>().Init("Basic", gameMain.GetComponent<gameMainScript>().playerList[1], sectorToSpawn, attackCanvas.gameObject);
+    public void OnPointerClick(PointerEventData eventData) //when a character divider is clicked, change it's colour and attempt to spawn a unit (may not spawn due to)
+    {                                                      //insufficient funds or not enough space on the spawn sector
+
+        GetComponent<Image>().color = new Color(0, 0, 0, 0.6f); //change character divider colour
+
+        //indicate to the buyUnitCanvas to spawn a unit (the type of which this character divider represents)
+        //this function must be called with "StartCoroutine" as a time delay will be propogated should a warning arise
+        StartCoroutine( buyUnitCanvas.GetComponent<unitCanvasScript>().spawnUnit(unitType) );
 
     }
 
-    public void OnPointerEnter(PointerEventData eventData)
+    public void OnPointerEnter(PointerEventData eventData) //when this character divider is hovered over, adjust its colour
     {
         GetComponent<Image>().color = new Color(0, 0, 0, 0.1960f);
     }
 
-    public void OnPointerExit(PointerEventData eventData)
+    public void OnPointerExit(PointerEventData eventData) //when this character divider is not hovered over, adjust its colour
     {
         GetComponent<Image>().color = new Color(0, 0, 0, 0.3098f);
     }
 
-    // Use this for initialization
-    void Start () {
-        //this.gameObject.AddComponent<PolygonCollider2D>(); //so that the unit can be clicked
+    void Start()
+    {
+        this.buyUnitCanvas = (this.transform.parent).parent; //set reference to buyUnitCanvas
     }
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }

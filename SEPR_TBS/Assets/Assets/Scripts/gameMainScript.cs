@@ -5,14 +5,23 @@ using UnityEngine;
 public class gameMainScript : MonoBehaviour {
 
     public List<player> playerList = new List<player>(); //list of players, details of which should be passed fom the main menu
-
+    public player currentPlayer; //stores the player that is currently making their move
 
 	// Use this for initialization
 	public gameMainScript()
     {
         //add players to player list
-        playerList.Add(new player("richard", Color.red, 100));
-        playerList.Add(new player("jamie", Color.blue, 50));
+        playerList.Add(new player("1", 100, "ALC"));
+        playerList.Add(new player("2", 50, "CON"));
+        playerList.Add(new player("3", 100, "DER"));
+        playerList.Add(new player("4", 50, "GOO"));
+        playerList.Add(new player("5", 100, "HAL"));
+        playerList.Add(new player("6", 50, "JAM"));
+        playerList.Add(new player("7", 100, "LAN"));
+        playerList.Add(new player("8", 50, "VAN"));
+        playerList.Add(new player("9", 100, "WEN"));
+
+        this.currentPlayer = playerList[0]; //currentPlayer does not change for testing purposes
     }
 	
 	// Update is called once per frame
