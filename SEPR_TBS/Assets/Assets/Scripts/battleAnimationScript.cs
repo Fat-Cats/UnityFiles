@@ -22,7 +22,7 @@ public class battleAnimationScript : MonoBehaviour {
 
     public Camera cameraRef; //Used to change the background color during animation from green to black
 
-    void Start()
+    public void start()
     {
         unit1Anim = battlingUnit1.GetComponent<Animator>(); //fetch both unit's animator components
         unit2Anim = battlingUnit2.GetComponent<Animator>();
@@ -37,12 +37,12 @@ public class battleAnimationScript : MonoBehaviour {
         //Calculate damage done to each unit and consequently their new health points
 
         System.Random percentageOfCritical = new System.Random(); //used to calculate random numbers used in chance based attacks
-        float randomInteger; //used in calculating whether units get critical hits
+        float randomFloat; //used in calculating whether units get critical hits
 
         //get unit stats
         int defenderHealth = defenderUnitScript.curHP;
         int attackerHealth = attackerUnitScript.curHP;
-        double defenderCritical = defenderUnitScript.critical;
+        double defenderAccuracy = defenderUnitScript.accuracy;
         double attackerCritical = attackerUnitScript.critical;
         double attackerAccuracy = attackerUnitScript.accuracy;
         int defenderDefence = defenderUnitScript.defence;
@@ -53,29 +53,32 @@ public class battleAnimationScript : MonoBehaviour {
 
         int defenderNewHealth; //used to store the defender's new health
 
-        randomInteger = percentageOfCritical.Next(0, 100) / 100; //get random 2 digit float between 0.00 and 1.00
+        randomFloat = (float)percentageOfCritical.Next(0, 100) / 100f; //get random 2 digit float between 0.00 and 1.00
 
-        if (randomInteger < attackerAccuracy) //determine if critical is applied
+        if (randomFloat < attackerAccuracy) //determine if critical is applied
         {
-            defenderNewHealth = Convert.ToInt32(Math.Floor(defenderHealth - ((attackerAttack - defenderDefence) * attackerCritical)));
+            int attackDefence = attackerAttack - defenderDefence;
+            if (attackDefence < 0) { attackDefence = 0; }
+
+            defenderNewHealth = Convert.ToInt32(Math.Floor(defenderHealth - ((attackDefence) * attackerCritical)));
         }
         else
         {
-            defenderNewHealth = defenderHealth - (attackerAttack - defenderDefence);
+            int attackDefence = attackerAttack - defenderDefence;
+            if (attackDefence < 0) { attackDefence = 0; }
+
+            defenderNewHealth = defenderHealth - (attackDefence);
         }
         if (defenderNewHealth < 0) { defenderNewHealth = 0; }; //health values cannot be negative
-        //========================================================================
-        //Need to place code here to kill unit in game
-        //========================================================================
         
         //attacker is only damaged if the defender achieves a critical (the chance of which is their critical stat). If they do, the damage done to the
         //attacker is the defending units defence
 
         int attackerNewHealth; //used to store the attacker's new health
 
-        randomInteger = percentageOfCritical.Next(0, 100) / 100; //get random 2 digit float between 0.00 and 1.00
+        randomFloat = (float)percentageOfCritical.Next(0, 100) / 100f; //get random 2 digit float between 0.00 and 1.00
 
-        if (randomInteger < defenderCritical) //if the defender has a critical, the attacker is damaged by the defenders defence
+        if (randomFloat < defenderAccuracy) //if the defender has a critical, the attacker is damaged by the defenders defence
         {
             attackerNewHealth = attackerHealth - defenderDefence;
         }
@@ -83,16 +86,13 @@ public class battleAnimationScript : MonoBehaviour {
         {
             attackerNewHealth = attackerHealth;
         }
-        if (defenderNewHealth < 0) { defenderNewHealth = 0; }; //health values cannot be negative
-        //========================================================================
-        //Need to place code here to kill unit in game
-        //========================================================================
+        if (attackerNewHealth < 0) { attackerNewHealth = 0; }; //health values cannot be negative
 
         battlingUnit1.GetComponent<battleAnimationUnit1Script>().attackingUnit = attackingUnit; //set units in battle animation scripts, so that their health
         battlingUnit2.GetComponent<battleAnimationUnit2Script>().defendingUnit = defendingUnit; //stats can be read and the health bar can be changed accordingly
 
-        battlingUnit1.GetComponent<Image>().sprite = attackingUnit.GetComponent<SpriteRenderer>().sprite; //set battlingUnit canvas' to appropriate sprites
-        battlingUnit2.GetComponent<Image>().sprite = defendingUnit.GetComponent<SpriteRenderer>().sprite;
+        battlingUnit1.GetComponent<Image>().sprite = attackerUnitScript.battleImage; //set battlingUnit canvas' to appropriate sprites
+        battlingUnit2.GetComponent<Image>().sprite = defenderUnitScript.battleImage;
 
         gameMap.SetActive(false); //stop displaying the map in the background of the scene
 

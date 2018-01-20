@@ -87,11 +87,24 @@ public class buildingScript : MonoBehaviour {
 
     void OnMouseDown() //when a building is clicked, it should open the unit buy menu and hide the game map
     {
-        this.buyUnitCanvas.gameObject.SetActive(true); //open the unit buying canvas
-        this.gameMap.gameObject.SetActive(false); //close the game map
+        gameMapScript theGameMapScript = this.gameMap.GetComponent<gameMapScript>(); //set a reference to the gameMapScript script of the gameMap
+        GameObject theSelectedUnit = theGameMapScript.selectedUnit; //set a reference to the gameMap's selected unit to see if a unit was selected before this sector was clicked on
 
-        //set the "spawnPoint" value in the buyUnitCanvas' "unitCanvasScript" script so that newly purchased units will spawn on the same sector
-        //as the building that they clicked to open the buy units menu
-        this.buyUnitCanvas.GetComponent<unitCanvasScript>().setSpawnPoint(sector.gameObject);
+        theGameMapScript.selectedUnit = null; //a sector has now been selected, so set the selectedUnit to null
+
+        if (theSelectedUnit != null && theSelectedUnit.GetComponent<unitScript>().canMoveTo().Contains(this.sector)) //if a unit has been selected, and this sector has been clicked, move 
+        {                                                                                                                //that unit to this sector, if it is within range
+            unitScript theSelectedUnitScript = theSelectedUnit.GetComponent<unitScript>(); //set a reference to the selected unit's unitScript script
+            theSelectedUnitScript.moveUnit(this.sector); //move unit to this sector
+        }
+        else if (theSelectedUnit == null)
+        {
+            this.buyUnitCanvas.gameObject.SetActive(true); //open the unit buying canvas
+            this.gameMap.gameObject.SetActive(false); //close the game map
+
+            //set the "spawnPoint" value in the buyUnitCanvas' "unitCanvasScript" script so that newly purchased units will spawn on the same sector
+            //as the building that they clicked to open the buy units menu
+            this.buyUnitCanvas.GetComponent<unitCanvasScript>().setSpawnPoint(sector.gameObject);
+        }
     }
 }

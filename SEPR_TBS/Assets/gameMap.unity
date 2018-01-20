@@ -478,7 +478,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &157350696
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -621,7 +621,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 962ddf35b2cfdaa4e8256798be436450, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitType: 
+  unitTypeRep: basic
+  aay: 0
 --- !u!114 &160561927
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -704,7 +705,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 962ddf35b2cfdaa4e8256798be436450, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitType: 
+  unitTypeRep: old
+  aay: 0
 --- !u!114 &272221449
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -857,7 +859,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 962ddf35b2cfdaa4e8256798be436450, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitType: 
+  unitTypeRep: sonic
+  aay: 0
 --- !u!114 &303762724
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1014,7 +1017,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 39b7abf9f4e341b468bad9b181b81f62, type: 3}
+  m_Sprite: {fileID: 21300000, guid: bf84e9109873e894395e27193cf0fc77, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -1212,19 +1215,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Basic
-
-    Health: 10
-
-    Attack: 4
-
-    Defence: 0
-
-    Accuracy: 0.5
-
-    Critical: 1.5
-
-    Speed: 1'
+  m_Text: "FellowKid\r:\nHealth = 20\r\nAttack = 4\nDefence = 1\nAccuracy = 0.75\r\nCritical
+    = 1.5\r\nSpeed = 1\r"
 --- !u!222 &575285061
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1298,19 +1290,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Basic
-
-    Health: 10
-
-    Attack: 4
-
-    Defence: 0
-
-    Accuracy: 0.5
-
-    Critical: 1.5
-
-    Speed: 1'
+  m_Text: "Jock\nHealth = 25\nAttack = 5\nAccuracy = 0.25\r\nDefence = 0\nCritical
+    = 1.75\r\nSpeed = 1"
 --- !u!222 &611271667
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1366,7 +1347,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 962ddf35b2cfdaa4e8256798be436450, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitType: 
+  unitTypeRep: jock
+  aay: 0
 --- !u!114 &622339074
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1449,7 +1431,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 962ddf35b2cfdaa4e8256798be436450, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitType: 
+  unitTypeRep: dgirl
+  aay: 0
 --- !u!114 &632450591
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1630,9 +1613,9 @@ MonoBehaviour:
 
     Attack: 4
 
-    Defence: 0
-
     Accuracy: 0.5
+
+    Defence: 0
 
     Critical: 1.5
 
@@ -1697,7 +1680,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 39b7abf9f4e341b468bad9b181b81f62, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 795fc46f3f887c140ac6228d3abe2425, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -1848,19 +1831,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Basic
-
-    Health: 10
-
-    Attack: 4
-
-    Defence: 0
-
-    Accuracy: 0.5
-
-    Critical: 1.5
-
-    Speed: 1'
+  m_Text: "Daddy's Girl:\nHealth = 20\nAttack = 4\nAccuracy = 0.5\r\nCritical = 1.5\nDefence
+    = 0\nSpeed = 1\n"
 --- !u!222 &938672425
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1924,7 +1896,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 39b7abf9f4e341b468bad9b181b81f62, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -1987,7 +1959,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1079929666
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2134,7 +2106,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 39b7abf9f4e341b468bad9b181b81f62, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1a68d34dfae19994c98407e7dab55dce, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -2296,7 +2268,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 39b7abf9f4e341b468bad9b181b81f62, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -2394,7 +2366,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 39b7abf9f4e341b468bad9b181b81f62, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1327423a221395d48bdf2a8d05bf0d95, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -2765,7 +2737,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 39b7abf9f4e341b468bad9b181b81f62, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d97955ff8bcfaff42a88b295b2059217, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -2846,19 +2818,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Basic
-
-    Health: 10
-
-    Attack: 4
-
-    Defence: 0
-
-    Accuracy: 0.5
-
-    Critical: 1.5
-
-    Speed: 1'
+  m_Text: "Sonic:\nHealth = 20\r\nAttack = 4\nAccuracy = 0.5\r\nCritical = 1.75\r\nDefence
+    = 0\r\nSpeed = 2"
 --- !u!222 &2080214620
 CanvasRenderer:
   m_ObjectHideFlags: 0

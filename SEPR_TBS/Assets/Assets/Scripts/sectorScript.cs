@@ -45,6 +45,11 @@ public class sectorScript : MonoBehaviour {
         this.gameObject.GetComponent<SpriteRenderer>().sprite = (Sprite)sectorSprites[sectorID + 1]; //set current sprite to appropriate sector as indicated by sectorID 
 
         this.gameObject.AddComponent<PolygonCollider2D>(); //add polygoncollider component to this sector so that it can be clicked by the user
+        this.gameObject.AddComponent<SpriteGlow.SpriteGlow>(); //add a PolygonCollider2D to the unit, so that a border can be drawn around the sector 
+        this.gameObject.GetComponent<SpriteGlow.SpriteGlow>().OutlineWidth = 0; //do not draw border around sector when it is created
+        this.gameObject.GetComponent<SpriteGlow.SpriteGlow>().GlowBrightness = 5; //SpriteGlow settings used to ensure borders can be drawn correctly
+        this.gameObject.GetComponent<SpriteGlow.SpriteGlow>().AlphaThreshold = 0.5f; //SpriteGlow settings used to assure borders can be drawn correctly
+
 
         this.gameObject.name = "mapSector" + sectorID.ToString(); //set this sectors name to "mapSector" followed by it's sectorID (E.G: "mapSector3")
 

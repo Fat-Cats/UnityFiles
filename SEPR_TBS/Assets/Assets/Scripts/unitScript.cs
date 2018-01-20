@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System.Linq;
 using System;
 
 public class unitScript : MonoBehaviour {
@@ -9,7 +9,7 @@ public class unitScript : MonoBehaviour {
     public Transform fightCanvas; //references the "fightCanvas" canvas, which is used to display battles between units
     public GameObject gameMap; //references the "gameMap", which is used to display the map 
     public player owner; //instance of the player class that owns this unit
-    public string unitType; //a string representing this unit's class ("Basic", "Jock"...)
+    public unitType unitType; //an enum representing this unit's class ("Basic", "Jock"...)
     public GameObject sectorStandingOn //stores the sector gameobject on which this unit is currently placed
     {
         get //return the sector that this unit is standing on when requested
@@ -22,7 +22,7 @@ public class unitScript : MonoBehaviour {
             {
                 return null;
             }
-        } 
+        }
     }
 
     //unit's statistics (these change according to a units class)
@@ -36,22 +36,48 @@ public class unitScript : MonoBehaviour {
     public int curHP; //unit current health points
     public int currentSpeed; //units remaining moves in a turn
 
-    public void Init(string unitType, player owner, GameObject sector, Transform fightCanvas, GameObject gameMap) //used to initilize values of units
+    public Sprite mapImage
     {
+        get
+        {
+            string path = this.unitType.ToString() + "-" + this.owner.collegeRep;
+            return Resources.LoadAll(path)[1] as Sprite; //select appropriate sprite.
+        }
+    }
+
+    public Sprite battleImage
+    {
+        get
+        {
+            string path;
+
+            if (this.unitType == unitType.jock)
+            {
+                path = this.unitType.ToString() + "-" + this.owner.collegeRep;
+                return Resources.LoadAll(path)[1] as Sprite; //select appropriate sprite.
+            }
+            else
+            {
+                path = this.unitType.ToString() + "A-" + this.owner.collegeRep;
+                return Resources.LoadAll(path)[1] as Sprite; //select appropriate sprite.
+            }
+        }
+    }
+
+    public void Init(unitType unitType, player owner, GameObject sector, Transform fightCanvas, GameObject gameMap) //used to initilize values of units
+    {
+        this.unitType = unitType; //set unit's unitType
+
         this.fightCanvas = fightCanvas; //set a reference to the "fightCanvas" canvas Transform
         this.gameMap = gameMap; //set a reference to the "gameMap" GameObject
 
         this.gameObject.AddComponent<PolygonCollider2D>(); //add a PolygonCollider2D to the unit, so that the unit can be clicked
-        this.gameObject.AddComponent<SpriteGlow.SpriteGlow>(); //add a PolygonCollider2D to the unit, so that a border can be drawn around the unit when selected
-        this.gameObject.GetComponent<SpriteGlow.SpriteGlow>().OutlineWidth = 0; //do not draw border around unit when it is created
-        this.gameObject.GetComponent<SpriteGlow.SpriteGlow>().GlowBrightness = 5; //SpriteGlow settings used to ensure borders can be drawn correctly
-        this.gameObject.GetComponent<SpriteGlow.SpriteGlow>().AlphaThreshold = 0.5f; //SpriteGlow settings used to assure borders can be drawn correctly
 
         this.moveUnit(sector); //move this unit into the specified starting sector
 
-        switch (unitType) //set unit statistics depending on the unitType
+        switch (unitType.ToString()) //set unit statistics depending on the unitType
         {
-            case "Basic": // Basic but cheap unit.
+            case "basic": // Basic but cheap unit.
                 this.maxHP = 10;
                 this.attack = 4;
                 this.defence = 0;
@@ -59,7 +85,7 @@ public class unitScript : MonoBehaviour {
                 this.critical = 1.5;
                 this.speed = 1;
                 break;
-            case "FellowKid": // Accurate with some defence.
+            case "dgirl": // Accurate with some defence.
                 this.maxHP = 20;
                 this.attack = 4;
                 this.defence = 1;
@@ -67,7 +93,7 @@ public class unitScript : MonoBehaviour {
                 this.critical = 1.5;
                 this.speed = 1;
                 break;
-            case "Jock": // Strong but stupid.
+            case "jock": // Strong but stupid.
                 this.maxHP = 25;
                 this.attack = 5;
                 this.accuracy = 0.25;
@@ -75,7 +101,7 @@ public class unitScript : MonoBehaviour {
                 this.critical = 1.75;
                 this.speed = 1;
                 break;
-            case "Sonic": // Fast unit.
+            case "sonic": // Fast unit.
                 this.maxHP = 20;
                 this.attack = 4;
                 this.accuracy = 0.5;
@@ -83,7 +109,7 @@ public class unitScript : MonoBehaviour {
                 this.defence = 0;
                 this.speed = 2;
                 break;
-            case "Daddy's Girl":
+            case "old":
                 this.maxHP = 20;
                 this.attack = 4;
                 this.accuracy = 0.5;
@@ -96,18 +122,46 @@ public class unitScript : MonoBehaviour {
         this.currentSpeed = this.speed; //at instantiation currentSpeed is set to speed
 
         this.owner = owner; //set unit's owner
-        this.unitType = unitType; //set unit's unitType
         this.curHP = maxHP; //at instantiation set current health points to maximum health points
         this.gameObject.transform.SetParent(sector.gameObject.transform); //set this unit's parent to the sector it is placed in
 
-        //===========================================================================================================================================================
-        this.gameObject.GetComponent<SpriteRenderer>().sprite = Resources.LoadAll("scrub")[1] as Sprite; //CHANGE ME to select appropriate sprite when art is done.
-        //===========================================================================================================================================================
+        this.gameObject.GetComponent<SpriteRenderer>().sprite = this.mapImage; //select appropriate sprite.
+
+        this.gameObject.AddComponent<PolygonCollider2D>(); //add a PolygonCollider2D to the unit, so that the unit can be clicked
+
+        this.gameObject.AddComponent<SpriteGlow.SpriteGlow>(); //add a SpriteGlow script to the unit, so that a border can be drawn around the unit when selected
+        this.gameObject.GetComponent<SpriteGlow.SpriteGlow>().OutlineWidth = 0; //do not draw border around unit when it is created
+        this.gameObject.GetComponent<SpriteGlow.SpriteGlow>().GlowBrightness = 5; //SpriteGlow settings used to ensure borders can be drawn correctly
+        this.gameObject.GetComponent<SpriteGlow.SpriteGlow>().AlphaThreshold = 0.5f; //SpriteGlow settings used to assure borders can be drawn correctly
     }
 
     void OnMouseDown() //called when the user clicks on this gameObject
     {
         gameMap.GetComponent<gameMapScript>().selectedUnit = this.gameObject; //set this unit as the selected unit in the gameMap's gameMapScript 
+    }
+
+    public List<GameObject> canAttack() //return a list of units that can be attacked by this unit
+    {
+        List<GameObject> canAttackUnits = new List<GameObject>(); 
+
+        HashSet<GameObject> sectorsThatCanBeAttacked = canMoveToRecursive(new HashSet<GameObject>(), this.currentSpeed);
+                                                                                                                       
+        foreach (GameObject reachableSector in sectorsThatCanBeAttacked)
+        {
+            foreach (GameObject containedUnit in reachableSector.GetComponent<sectorScript>().unitsContained)
+            {
+                if(containedUnit == null)
+                {
+                    
+                }
+                else if (containedUnit.GetComponent<unitScript>().owner != this.owner) //if unit in reachable sector is an enemy
+                {
+                    canAttackUnits.Add(containedUnit);
+                }
+            }
+        }
+
+        return canAttackUnits; 
     }
 
     public List<GameObject> canMoveTo() //return a list of sectors that a unit can move to. This function uses a recursive function "canMoveToRecursive" to calculate which sectors 
@@ -119,17 +173,20 @@ public class unitScript : MonoBehaviour {
                                                                                                                         //that can be moved to by this unit. A hashset is used as it
                                                                                                                         //does not allow duplication of elements. This means that I do not
                                                                                                                         //need to micromanage the elements it returns
-
-        foreach (GameObject element in sectorsThatCanBeMovedTo) //convert "sectorsThatCanBeMovedTo" to a list (just because most other
+        //check for full sectors before adding to list 
+        foreach (GameObject reachableSector in sectorsThatCanBeMovedTo) //convert "sectorsThatCanBeMovedTo" to a list (just because most other
         {                                                       //functions in this program work with lists rather than HashSets) 
 
-            canMoveToSectors.Add(element);
+            if (reachableSector.GetComponent<sectorScript>().unitsContained.Contains(null))
+            {
+                canMoveToSectors.Add(reachableSector);
+            }
         }
 
         return canMoveToSectors; //return list of sectors that can be moved to
     }
 
-    //EDIT THIS FUNCTION TO INCLUDE MORE INFORMATION
+    //EDIT THIS FUNCTION TO INCLUDE HOW MANY MOVING POINTS (currentSpeed) MOVING TO ANY TILE REQUIRES
     private HashSet<GameObject> canMoveToRecursive(HashSet<GameObject> checkedSectors, int unitSpeed) //recursive function used in "canMoveTo" calculates hashSet of sectors that
     {                                                                                                 //this unit can move to from its current position (explores choices for units
 
@@ -145,26 +202,7 @@ public class unitScript : MonoBehaviour {
                 {
                     //now that new sectors that can be reached "newNeighbour" have been found, we need to determine if they can be moved to (I.E: if they are already full of units)
 
-                    bool sectorIsAtCapacity = true; //assume that this unit has no spaces left for this unit
-
-                    for (int i = 0; i < 3; i++) //check each value stored in this sector's "unitsContained" array
-                    {
-                        //if (newNeighbour.gameObject.GetComponent<sectorScript>().unitsContained[i].GetComponent<unitScript>().owner != this.owner)
-                        //{
-                        //    sectorIsAtCapacity = true;
-                        //    break;
-                        //} // used to stop 2 units from opposite teams moving into the same sector
-
-                        if (newNeighbour.gameObject.GetComponent<sectorScript>().unitsContained[i] == null) //(newNeighbour.gameObject.GetComponentInParent<sectorScript>().unitsContained[i] == null) //if this array contains a null value (I.E: free space) it can be moved to
-                        {
-                            sectorIsAtCapacity = false; //this sector can be moved to as it has free spaces
-                        }
-                    }
-
-                    if (!sectorIsAtCapacity) //if this sector can be moved to (if this sector is not full)
-                    {
-                        neighbours.Add(newNeighbour); //add this sector to list of reachable sectors
-                    }
+                    neighbours.Add(newNeighbour); //add this sector to list of reachable sectors
                 }
             }
 

@@ -17,7 +17,7 @@ public class unitCanvasScript : MonoBehaviour {
         this.spawnSector = spawnSector;
     }
 
-    public IEnumerator spawnUnit(string unitType) //this function spawns a unit, of type unitType, in sector spawningSector if there is available space
+    public IEnumerator spawnUnit(unitType unitType) //this function spawns a unit, of type unitType, in sector spawningSector if there is available space
     {
         bool isSpace = false; //this bool is used to keep track of when an empty space in the sector is found
 

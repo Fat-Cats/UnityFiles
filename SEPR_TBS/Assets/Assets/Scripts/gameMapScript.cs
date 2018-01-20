@@ -34,7 +34,7 @@ public class gameMapScript : MonoBehaviour
                 if (_selectedUnitScript.owner != valueUnitScript.owner)
                 {
                     //given that the selected unit can move to a newly selected enemy unit, battle commences 
-                    if (_selectedUnitScript.canMoveTo().Contains(valueUnitScript.sectorStandingOn))
+                    if (_selectedUnitScript.canAttack().Contains(value))
                     {
                         _selectedUnitScript.attackUnit(value); //previously selected unit attacks newly selected unit
                     }
@@ -59,6 +59,11 @@ public class gameMapScript : MonoBehaviour
                 {
                     sect.gameObject.GetComponent<SpriteGlow.SpriteGlow>().OutlineWidth = 0;
                 }
+
+                foreach (GameObject unitToAttack in selectedUnit.GetComponent<unitScript>().canAttack()) //add new "can attack" indicators
+                {
+                    unitToAttack.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1);
+                }
             }
 
             _selectedUnit = value; //set new selectedUnit value
@@ -76,12 +81,19 @@ public class gameMapScript : MonoBehaviour
                     sect.gameObject.GetComponent<SpriteGlow.SpriteGlow>().OutlineWidth = 3;
                     sect.gameObject.GetComponent<SpriteGlow.SpriteGlow>().GlowColor = _selectedUnitScript.owner.teamColour;
                 }
+
+                foreach (GameObject unitToAttack in selectedUnit.GetComponent<unitScript>().canAttack()) //add new "can attack" indicators
+                {
+                    unitToAttack.GetComponent<SpriteRenderer>().color = Color.red;
+                }
+
             }
         }
     }
 
     void Start()
     {
+        fightCanvas.GetComponent<battleAnimationScript>().start();
 
         for (int i = 0; i <= 30; i++) //instantiate 30 sector prefabs, set relevant x and y positions on the map and assign appropriate sectorID's
         {
@@ -115,16 +127,16 @@ public class gameMapScript : MonoBehaviour
         //need to place vice chancelor, as a building, randomly at the start of each game
 
         //create units for testing
-        createUnit("Basic", GetComponentInParent<gameMainScript>().playerList[0], sectors[0]);
-        createUnit("Basic", GetComponentInParent<gameMainScript>().playerList[1], sectors[1]);
-        createUnit("Basic", GetComponentInParent<gameMainScript>().playerList[2], sectors[2]);
-        createUnit("Basic", GetComponentInParent<gameMainScript>().playerList[3], sectors[3]);
-        createUnit("Basic", GetComponentInParent<gameMainScript>().playerList[4], sectors[4]);
-        createUnit("Basic", GetComponentInParent<gameMainScript>().playerList[5], sectors[5]);
-        createUnit("Basic", GetComponentInParent<gameMainScript>().playerList[6], sectors[6]);
-        createUnit("Basic", GetComponentInParent<gameMainScript>().playerList[7], sectors[7]);
-        createUnit("Basic", GetComponentInParent<gameMainScript>().playerList[8], sectors[8]);
-
+        createUnit(unitType.basic, GetComponentInParent<gameMainScript>().playerList[0], sectors[0]);
+        createUnit(unitType.basic, GetComponentInParent<gameMainScript>().playerList[2], sectors[2]);
+        createUnit(unitType.basic, GetComponentInParent<gameMainScript>().playerList[3], sectors[3]);
+        createUnit(unitType.basic, GetComponentInParent<gameMainScript>().playerList[4], sectors[4]);
+        createUnit(unitType.basic, GetComponentInParent<gameMainScript>().playerList[1], sectors[1]);
+        createUnit(unitType.basic, GetComponentInParent<gameMainScript>().playerList[5], sectors[5]);
+        createUnit(unitType.basic, GetComponentInParent<gameMainScript>().playerList[6], sectors[6]);
+        createUnit(unitType.basic, GetComponentInParent<gameMainScript>().playerList[7], sectors[7]);
+        createUnit(unitType.basic, GetComponentInParent<gameMainScript>().playerList[8], sectors[8]);
+        
         this.selectedUnit = null; //at the start of the game, no units are selected
 
         fightCanvas.gameObject.SetActive(false); //make fight canvas not visible at start of game (will be made visible during battles)
@@ -132,7 +144,7 @@ public class gameMapScript : MonoBehaviour
         buyUnitCanvas.GetComponent<unitCanvasScript>().warningMessage.gameObject.SetActive(false);
     }
 
-    public void createUnit(string unitType, player owner, GameObject sectorToSpawn) //this function creates a unit of type "unitType" at "sectorToSpawn" and sets it's owner to "owner"
+    public void createUnit(unitType unitType, player owner, GameObject sectorToSpawn) //this function creates a unit of type "unitType" at "sectorToSpawn" and sets it's owner to "owner"
     {
         GameObject newUnit =  Instantiate(unit, new Vector3(0, 0, 0), Quaternion.identity);  //instantate unit prefab
         newUnit.GetComponent<unitScript>().Init(unitType, owner, sectorToSpawn, fightCanvas, this.gameObject); //perform unit initialization

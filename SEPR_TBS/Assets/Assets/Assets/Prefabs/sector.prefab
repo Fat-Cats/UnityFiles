@@ -21,7 +21,6 @@ GameObject:
   - component: {fileID: 4462282215006662}
   - component: {fileID: 212490473972239268}
   - component: {fileID: 114716331940539204}
-  - component: {fileID: 114016686452777734}
   m_Layer: 0
   m_Name: sector
   m_TagString: Untagged
@@ -42,23 +41,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114016686452777734
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1191468372229914}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8f6d3c6e4250e84192f5b34ce9e71bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _glowColor: {r: 0, g: 0, b: 0, a: 1}
-  _glowBrightness: 3.36
-  _outlineWidth: 0
-  _alphaThreshold: 0.527
-  _drawOutside: 0
-  _enableInstancing: 0
 --- !u!114 &114716331940539204
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -70,7 +52,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e26d79cb263bcd4dbe95bfc0ea62e52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unit: {fileID: 1179102951306514, guid: fa16454d916af1141a8e03d5a2e19c96, type: 2}
+  gameMap: {fileID: 0}
   neighbours: []
   unitsContained:
   - {fileID: 0}
