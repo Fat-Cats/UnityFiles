@@ -8,7 +8,7 @@ public class gameMainScript : MonoBehaviour {
     public player currentPlayer; //stores the player that is currently making their move
 
 	// Use this for initialization
-	public gameMainScript()
+	void Start()
     {
         //add players to player list
         playerList.Add(new player("1", 100, "ALC"));
@@ -22,6 +22,8 @@ public class gameMainScript : MonoBehaviour {
         playerList.Add(new player("9", 100, "WEN"));
 
         this.currentPlayer = playerList[0]; //currentPlayer does not change for testing purposes
+
+        this.transform.GetChild(0).GetComponent<gameMapScript>().gameMapStart();
     }
 	
 	// Update is called once per frame

@@ -9,7 +9,8 @@ public class sectorScript : MonoBehaviour {
     public List<GameObject> neighbours = new List<GameObject>(); //stores a list of neighbouring sectors
     public GameObject[] unitsContained = new GameObject[3]; //stores all units currently placed in this sector [maximum: 3]
     public Vector3[] standingPoints = new Vector3[3]; //stores vectors representing locations for 3 units to stand in, on this sector
-    private int sectorID; //this stores this sectors sectorID
+    public int sectorID; //this stores this sectors sectorID
+    public bool isBusStop;
 
     public player owner; //this shows which player currently owns this sector. a sector is owned by a player if one of their unit's enters through the sector.
                          //a player loses control of a sector if another player's unit enters a sector. each turn, each player earns money for the number of sectors
@@ -40,8 +41,16 @@ public class sectorScript : MonoBehaviour {
             this.transform.localScale = new Vector3(scaleFactorX, scaleFactorY, scaleFactorX);
             this.transform.Rotate(new Vector3(-12.388f, -12.388f, -12.388f));
         }
+        if (new int[] { 13, 28, 10, 16, 20 }.Contains(sectorID)) //if this sector contains a bus stop
+        {
+            this.isBusStop = true;
+        }
+        else
+        {
+            this.isBusStop = false;
+        }
 
-        Object[] sectorSprites = Resources.LoadAll("mapSectors"); //load all map sector sprites 
+            Object[] sectorSprites = Resources.LoadAll("mapSectors"); //load all map sector sprites 
         this.gameObject.GetComponent<SpriteRenderer>().sprite = (Sprite)sectorSprites[sectorID + 1]; //set current sprite to appropriate sector as indicated by sectorID 
 
         this.gameObject.AddComponent<PolygonCollider2D>(); //add polygoncollider component to this sector so that it can be clicked by the user

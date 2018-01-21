@@ -27,7 +27,7 @@ public class player {
                 break;
 
             case "DER":
-                this.teamColour = Color.grey;
+                this.teamColour = new Color((float)154/255, (float)36/255, 0f, (float)61/255);
                 break;
 
             case "GOO":
@@ -39,7 +39,7 @@ public class player {
                 break;
 
             case "JAM":
-                this.teamColour = Color.white;
+                this.teamColour = Color.black;
                 break;
 
             case "LAN":
@@ -47,11 +47,11 @@ public class player {
                 break;
 
             case "VAN":
-                this.teamColour = Color.cyan; //new Color(0.5f, 0, 1, 1);
+                this.teamColour = Color.cyan;
                 break;
 
             case "WEN":
-                this.teamColour = Color.black; //new Color(1, 0.5f, 0, 1);
+                this.teamColour = Color.white; 
                 break;
         }
     }

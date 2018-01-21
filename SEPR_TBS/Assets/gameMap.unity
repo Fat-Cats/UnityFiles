@@ -478,7 +478,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &157350696
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1215,8 +1215,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "FellowKid\r:\nHealth = 20\r\nAttack = 4\nDefence = 1\nAccuracy = 0.75\r\nCritical
-    = 1.5\r\nSpeed = 1\r"
+  m_Text: "FellowKid\r\nHealth: 20\r\nAttack: 4\nDefence: 1\nAccuracy: 0.75\r\nCritical:
+    1.5\r\nSpeed: 1\r"
 --- !u!222 &575285061
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1290,8 +1290,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Jock\nHealth = 25\nAttack = 5\nAccuracy = 0.25\r\nDefence = 0\nCritical
-    = 1.75\r\nSpeed = 1"
+  m_Text: "Jock\nHealth: 25\nAttack: 5\nAccuracy: 0.25\r\nDefence: 0\nCritical: 1.75\r\nSpeed:
+    1"
 --- !u!222 &611271667
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1831,8 +1831,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Daddy's Girl:\nHealth = 20\nAttack = 4\nAccuracy = 0.5\r\nCritical = 1.5\nDefence
-    = 0\nSpeed = 1\n"
+  m_Text: "Daddy's Girl\nHealth: 20\nAttack: 4\nAccuracy: 0.5\r\nCritical: 1.5\nDefence:
+    0\nSpeed: 1\n"
 --- !u!222 &938672425
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2818,8 +2818,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Sonic:\nHealth = 20\r\nAttack = 4\nAccuracy = 0.5\r\nCritical = 1.75\r\nDefence
-    = 0\r\nSpeed = 2"
+  m_Text: "Sonic\nHealth: 20\r\nAttack: 4\nAccuracy: 0.5\r\nCritical: 1.75\r\nDefence:
+    0\r\nSpeed: 2"
 --- !u!222 &2080214620
 CanvasRenderer:
   m_ObjectHideFlags: 0

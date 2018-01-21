@@ -71,8 +71,6 @@ public class unitScript : MonoBehaviour {
         this.fightCanvas = fightCanvas; //set a reference to the "fightCanvas" canvas Transform
         this.gameMap = gameMap; //set a reference to the "gameMap" GameObject
 
-        this.gameObject.AddComponent<PolygonCollider2D>(); //add a PolygonCollider2D to the unit, so that the unit can be clicked
-
         this.moveUnit(sector); //move this unit into the specified starting sector
 
         switch (unitType.ToString()) //set unit statistics depending on the unitType
@@ -142,17 +140,54 @@ public class unitScript : MonoBehaviour {
 
     public List<GameObject> canAttack() //return a list of units that can be attacked by this unit
     {
-        List<GameObject> canAttackUnits = new List<GameObject>(); 
+        List<GameObject> canAttackUnits = new List<GameObject>();
 
-        HashSet<GameObject> sectorsThatCanBeAttacked = canMoveToRecursive(new HashSet<GameObject>(), this.currentSpeed);
-                                                                                                                       
-        foreach (GameObject reachableSector in sectorsThatCanBeAttacked)
+        List<GameObject> immediateSectors = this.sectorStandingOn.GetComponent<sectorScript>().neighbours;
+
+        List<GameObject> copyList = new List<GameObject>();
+
+        if (this.sectorStandingOn.GetComponent<sectorScript>().sectorID == 28)
+        {
+            foreach (GameObject sector in immediateSectors)
+            {
+                if (!sector.GetComponent<sectorScript>().isBusStop || sector.GetComponent<sectorScript>().sectorID == 10)
+                {
+                    copyList.Add(sector);
+                }
+            }
+        }
+        else if (this.sectorStandingOn.GetComponent<sectorScript>().sectorID == 10)
+        {
+            foreach(GameObject sector in immediateSectors)
+            {
+                if (!sector.GetComponent<sectorScript>().isBusStop || sector.GetComponent<sectorScript>().sectorID == 28)
+                {
+                    copyList.Add(sector);
+                }
+            }
+        }
+        else if (this.sectorStandingOn.GetComponent<sectorScript>().isBusStop)
+        {
+            foreach (GameObject sector in immediateSectors)
+            {
+                if (!sector.GetComponent<sectorScript>().isBusStop)
+                {
+                    copyList.Add(sector);
+                }
+            }
+        }
+        else
+        {
+            copyList = immediateSectors;
+        }
+
+        foreach (GameObject reachableSector in copyList)
         {
             foreach (GameObject containedUnit in reachableSector.GetComponent<sectorScript>().unitsContained)
             {
-                if(containedUnit == null)
+                if (containedUnit == null)
                 {
-                    
+
                 }
                 else if (containedUnit.GetComponent<unitScript>().owner != this.owner) //if unit in reachable sector is an enemy
                 {
@@ -161,7 +196,7 @@ public class unitScript : MonoBehaviour {
             }
         }
 
-        return canAttackUnits; 
+        return canAttackUnits;
     }
 
     public List<GameObject> canMoveTo() //return a list of sectors that a unit can move to. This function uses a recursive function "canMoveToRecursive" to calculate which sectors 

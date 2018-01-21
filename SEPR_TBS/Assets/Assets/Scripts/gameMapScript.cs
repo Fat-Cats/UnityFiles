@@ -91,7 +91,7 @@ public class gameMapScript : MonoBehaviour
         }
     }
 
-    void Start()
+    public void gameMapStart()
     {
         fightCanvas.GetComponent<battleAnimationScript>().start();
 

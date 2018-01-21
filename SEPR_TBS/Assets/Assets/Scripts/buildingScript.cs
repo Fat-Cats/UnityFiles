@@ -101,7 +101,7 @@ public class buildingScript : MonoBehaviour {
         {
             this.buyUnitCanvas.gameObject.SetActive(true); //open the unit buying canvas
             this.gameMap.gameObject.SetActive(false); //close the game map
-
+            buyUnitCanvas.GetComponent<unitCanvasScript>().warningMessage.gameObject.SetActive(false);
             //set the "spawnPoint" value in the buyUnitCanvas' "unitCanvasScript" script so that newly purchased units will spawn on the same sector
             //as the building that they clicked to open the buy units menu
             this.buyUnitCanvas.GetComponent<unitCanvasScript>().setSpawnPoint(sector.gameObject);
