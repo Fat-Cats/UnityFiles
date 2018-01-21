@@ -8,17 +8,18 @@ public class player {
     public string collegeRep; //this string indicates which college a player represents
                               //colleges are stored as 3 upper case letters (E.G: "HAL" - halifax, "GOO" - Goodricke...)
                               //each college has a predefined representative colour
-    public Color teamColour; //color indicating this players territory on the map
+    public Color teamColour; //color indicating this college's territory on the map
     public int playerCurrency; //amount of currency this player currently has (can be used to purchase units)
 
     public player(string name, int currency, string college) //called when a new player is created
     {
-        this.playerName = name; //set locally stored playerName
-        this.playerCurrency = currency; //set locally stored currency
-        this.collegeRep = college; //set locally stored college
-        switch(college)
+        this.playerName = name; //set playerName
+        this.playerCurrency = currency; //set currency
+        this.collegeRep = college; //set college
+
+        switch(college) //set teamColour based on college
         {
-            case "ALC": //Alcuin's team colour is red
+            case "ALC":
                 this.teamColour = Color.red;
                 break;
 
@@ -27,11 +28,11 @@ public class player {
                 break;
 
             case "DER":
-                this.teamColour = new Color((float)154/255, (float)36/255, 0f, (float)61/255);
+                this.teamColour = new Color((float)154/255, (float)36/255, 0f, (float)61/255); //but it the colour looks good
                 break;
 
             case "GOO":
-                this.teamColour = Color.green;
+                this.teamColour = Color.green; 
                 break;
 
             case "HAL":

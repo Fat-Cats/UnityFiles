@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class unitCanvasScript : MonoBehaviour {
 
-    public GameObject gameMain; //this is a reference to the gameMain gameObject. it allows us to access players so that owners can be assigned to newly created players.
+    public GameObject gameMain; //this is a reference to the gameMain gameObject. it allows us to access players so that owners can be assigned to newly created unit's
                                 //it also allows us to access the "createUnit" function in its child gameobject "gameMapScript" (set in the unity editor)
 
     public GameObject spawnSector; //this is set when a building is clicked. The building sets "spawnSector" to the sector that it is placed on.
@@ -23,9 +23,9 @@ public class unitCanvasScript : MonoBehaviour {
 
         for (int positionIndex = 0; positionIndex < 3; positionIndex++) //search all possible standing positions on spawning sector too see if the sector is full
         {
-            if (spawnSector.GetComponent<sectorScript>().unitsContained[positionIndex] == null && !isSpace) //if an empty space is found, and has not been found before
-            {                                                                                               //as if one has already been found then the unit has already been
-                                                                                                            //placed and duplicates need to be avoided 
+            if (spawnSector.GetComponent<sectorScript>().unitsContained[positionIndex] == null && !isSpace) //if an empty space is found
+            {                                                                                               
+                                                                                                                                    
 
                 gameMainScript GameMainScript = gameMain.GetComponent<gameMainScript>(); //set reference to gameMain's gameMainScript
                 gameMapScript GameMapScript = gameMain.transform.GetChild(0).GetComponent<gameMapScript>(); //set reference to gameMap's gameMapScript

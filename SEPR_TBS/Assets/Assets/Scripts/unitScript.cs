@@ -25,7 +25,7 @@ public class unitScript : MonoBehaviour {
         }
     }
 
-    //unit's statistics (these change according to a units class)
+    //unit's statistics (these change according to a unit's class)
     public int maxHP; //units maximum hp
     public int attack; //units attack points, used to calculate damage done in battle
     public int defence; //units defense points, used to calculate hp loss in battle
@@ -38,7 +38,7 @@ public class unitScript : MonoBehaviour {
 
     public Sprite mapImage
     {
-        get
+        get //a units map image is a collection of [unitType]-[college] (E.G: "basic-DER")
         {
             string path = this.unitType.ToString() + "-" + this.owner.collegeRep;
             return Resources.LoadAll(path)[1] as Sprite; //select appropriate sprite.
@@ -49,7 +49,7 @@ public class unitScript : MonoBehaviour {
     {
         get
         {
-            string path;
+            string path; //a units battle image is a collection of [unitType]A-[college] (E.G: "basicA-DER")
 
             if (this.unitType == unitType.jock)
             {
@@ -86,8 +86,8 @@ public class unitScript : MonoBehaviour {
             case "dgirl": // Accurate with some defence.
                 this.maxHP = 20;
                 this.attack = 4;
-                this.defence = 1;
-                this.accuracy = 0.75;
+                this.defence = 0;
+                this.accuracy = 0.5;
                 this.critical = 1.5;
                 this.speed = 1;
                 break;
@@ -112,7 +112,7 @@ public class unitScript : MonoBehaviour {
                 this.attack = 4;
                 this.accuracy = 0.5;
                 this.critical = 1.5;
-                this.defence = 0;
+                this.defence = 1;
                 this.speed = 1;
                 break;
         }
@@ -140,50 +140,53 @@ public class unitScript : MonoBehaviour {
 
     public List<GameObject> canAttack() //return a list of units that can be attacked by this unit
     {
-        List<GameObject> canAttackUnits = new List<GameObject>();
+        List<GameObject> canAttackUnits = new List<GameObject>(); //stores list of units that can be attacked by this unit
 
-        List<GameObject> immediateSectors = this.sectorStandingOn.GetComponent<sectorScript>().neighbours;
+        List<GameObject> immediateSectors = this.sectorStandingOn.GetComponent<sectorScript>().neighbours; //only units in directly neighbouring sectors can be attacked
 
-        List<GameObject> copyList = new List<GameObject>();
+        List<GameObject> copyList = new List<GameObject>(); //used in removal of bus stop neighbours
+                                                            //units are not allowed to attack accross bus stops
 
-        if (this.sectorStandingOn.GetComponent<sectorScript>().sectorID == 28)
-        {
-            foreach (GameObject sector in immediateSectors)
+        if (this.sectorStandingOn.GetComponent<sectorScript>().sectorID == 28) //sectors 28 and 10 are an exception as they are both bus stops and actual neighbours
+        {                                                                      //and so units can battle between these sectors despite them both being bus stops
+
+            foreach (GameObject sector in immediateSectors) //search all neighbours
             {
-                if (!sector.GetComponent<sectorScript>().isBusStop || sector.GetComponent<sectorScript>().sectorID == 10)
+                if (!sector.GetComponent<sectorScript>().isBusStop || sector.GetComponent<sectorScript>().sectorID == 10) //if sector is not a bus stop or 10
                 {
-                    copyList.Add(sector);
+                    copyList.Add(sector); //add to copyList, which contains sectors that enemy unit's could possible be on
                 }
             }
         }
-        else if (this.sectorStandingOn.GetComponent<sectorScript>().sectorID == 10)
-        {
-            foreach(GameObject sector in immediateSectors)
+        else if (this.sectorStandingOn.GetComponent<sectorScript>().sectorID == 10) //sectors 28 and 10 are an exception as they are both bus stops and actual neighbours
+        {                                                                           //and so units can battle between these sectors despite them both being bus stops
+
+            foreach(GameObject sector in immediateSectors) //search all neighbours
             {
-                if (!sector.GetComponent<sectorScript>().isBusStop || sector.GetComponent<sectorScript>().sectorID == 28)
+                if (!sector.GetComponent<sectorScript>().isBusStop || sector.GetComponent<sectorScript>().sectorID == 28) //if sector is not a bus stop or 28
                 {
-                    copyList.Add(sector);
+                    copyList.Add(sector); //add to copyList, which contains sectors that enemy unit's could possible be on
+                } 
+            }
+        }
+        else if (this.sectorStandingOn.GetComponent<sectorScript>().isBusStop) //in other cases, all bus stops cannot attack other bus stops
+        {
+            foreach (GameObject sector in immediateSectors) //search all neighbours
+            {
+                if (!sector.GetComponent<sectorScript>().isBusStop) //if sector is not a bus stop
+                {
+                    copyList.Add(sector); //add to copyList, which contains sectors that enemy unit's could possible be on
                 }
             }
         }
-        else if (this.sectorStandingOn.GetComponent<sectorScript>().isBusStop)
+        else //if the sector that this unit is standing on, do not consider bus stops
         {
-            foreach (GameObject sector in immediateSectors)
-            {
-                if (!sector.GetComponent<sectorScript>().isBusStop)
-                {
-                    copyList.Add(sector);
-                }
-            }
-        }
-        else
-        {
-            copyList = immediateSectors;
+            copyList = immediateSectors; //copy neighbours to copyList, which contains sectors that enemy unit's could possible be on
         }
 
-        foreach (GameObject reachableSector in copyList)
+        foreach (GameObject reachableSector in copyList) //consider each sector which enemy unit's may be standing on
         {
-            foreach (GameObject containedUnit in reachableSector.GetComponent<sectorScript>().unitsContained)
+            foreach (GameObject containedUnit in reachableSector.GetComponent<sectorScript>().unitsContained) 
             {
                 if (containedUnit == null)
                 {
@@ -191,12 +194,12 @@ public class unitScript : MonoBehaviour {
                 }
                 else if (containedUnit.GetComponent<unitScript>().owner != this.owner) //if unit in reachable sector is an enemy
                 {
-                    canAttackUnits.Add(containedUnit);
+                    canAttackUnits.Add(containedUnit); //this unit can attack that enemy
                 }
             }
         }
 
-        return canAttackUnits;
+        return canAttackUnits; //return list of enemy units that can be attacked by this unit
     }
 
     public List<GameObject> canMoveTo() //return a list of sectors that a unit can move to. This function uses a recursive function "canMoveToRecursive" to calculate which sectors 
@@ -208,22 +211,21 @@ public class unitScript : MonoBehaviour {
                                                                                                                         //that can be moved to by this unit. A hashset is used as it
                                                                                                                         //does not allow duplication of elements. This means that I do not
                                                                                                                         //need to micromanage the elements it returns
-        //check for full sectors before adding to list 
-        foreach (GameObject reachableSector in sectorsThatCanBeMovedTo) //convert "sectorsThatCanBeMovedTo" to a list (just because most other
-        {                                                       //functions in this program work with lists rather than HashSets) 
 
-            if (reachableSector.GetComponent<sectorScript>().unitsContained.Contains(null))
+        foreach (GameObject reachableSector in sectorsThatCanBeMovedTo) //convert "sectorsThatCanBeMovedTo" to a list (just because most other
+        {                                                               //functions in this program work with lists rather than HashSets) 
+
+            if (reachableSector.GetComponent<sectorScript>().unitsContained.Contains(null)) //check for full sectors before adding to list
             {
-                canMoveToSectors.Add(reachableSector);
+                canMoveToSectors.Add(reachableSector); //if sector is not full, add to list
             }
         }
 
         return canMoveToSectors; //return list of sectors that can be moved to
     }
 
-    //EDIT THIS FUNCTION TO INCLUDE HOW MANY MOVING POINTS (currentSpeed) MOVING TO ANY TILE REQUIRES
     private HashSet<GameObject> canMoveToRecursive(HashSet<GameObject> checkedSectors, int unitSpeed) //recursive function used in "canMoveTo" calculates hashSet of sectors that
-    {                                                                                                 //this unit can move to from its current position (explores choices for units
+    {                                                                                                 //this unit can move to from its current position
 
         checkedSectors.Add(this.transform.parent.gameObject); //add this unit's starting sector to HashSet, so it can be explored
 
@@ -252,7 +254,7 @@ public class unitScript : MonoBehaviour {
 
     public void moveUnit(GameObject destinationSector) //function to move a unit from its current position to a new sector
     {
-        sectorScript thisSectorScript;
+        sectorScript thisSectorScript; //sector script of this sector (to make code shorter)
 
         if (this.sectorStandingOn != null) //if unit has already been placed (might not have been as this function is used to move freshly instantiated units)
         {
@@ -268,7 +270,7 @@ public class unitScript : MonoBehaviour {
             }
         }
 
-        this.gameObject.transform.SetParent(destinationSector.gameObject.transform); //change the sector that this unit is standing on
+        this.gameObject.transform.SetParent(destinationSector.gameObject.transform); //change the parent of this unit to the new sector that this unit is standing on
 
         thisSectorScript = this.sectorStandingOn.GetComponent<sectorScript>(); //set a reference to the sectorScript of the sector this unit is newly standing on
 
@@ -293,7 +295,7 @@ public class unitScript : MonoBehaviour {
         fightCanvas.GetComponent<battleAnimationScript>().fightAnimation(this.gameObject, unitToAttack); //start battle animation
     }
 
-    public void killIfDead()
+    public void killIfDead() //kill this unit if it is dead
     {
         if (this.curHP <= 0) //if this unit's current health points are at 0 or lower, delete the unit
         {

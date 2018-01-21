@@ -6,35 +6,34 @@ using System;
 
 public class battleAnimationScript : MonoBehaviour {
 
-    //stores the canvas' used to represent battling unit's
-    public GameObject battlingUnit1;
-    public GameObject battlingUnit2;
+    //stores the canvas' used to draw battling unit's
+    public GameObject battlingUnit1; //draws attacking unit (set in unity editor)
+    public GameObject battlingUnit2; //draws defending unit (set in unity editor)
 
-    unitScript defenderUnitScript; //scripts of battling unit's 
+    unitScript defenderUnitScript; //scripts of battling units'
     unitScript attackerUnitScript; //used to get stats of either unit
 
-    //stores the battling unit's animators
-    Animator unit1Anim;
-    Animator unit2Anim;
+    //stores the battling unit's animators which are set once at this object's instantiation
+    Animator unit1Anim; //animator for attacking unit
+    Animator unit2Anim; //animator for defending unit
 
-    //public Transform canvas;
-    public GameObject gameMap;
+    public GameObject gameMap; 
 
-    public Camera cameraRef; //Used to change the background color during animation from green to black
+    public Camera cameraRef; //reference to the camera used to change the background color during animation from green to black (set in the unity editor)
 
-    public void start()
+    public void start() //called once from gameMap at start of game to fetch unit animator variables
     {
         unit1Anim = battlingUnit1.GetComponent<Animator>(); //fetch both unit's animator components
         unit2Anim = battlingUnit2.GetComponent<Animator>();
     }
 
 
-    public void fightAnimation (GameObject attackingUnit, GameObject defendingUnit)
+    public void fightAnimation (GameObject attackingUnit, GameObject defendingUnit) //function used to commence fight animation between 2 units
     {
-        defenderUnitScript = defendingUnit.GetComponent<unitScript>(); //set battling unit's unit scripts
+        defenderUnitScript = defendingUnit.GetComponent<unitScript>(); //fetch battling unit's unitScript's
         attackerUnitScript = attackingUnit.GetComponent<unitScript>();
 
-        //Calculate damage done to each unit and consequently their new health points
+        //Calculate damage done to each unit and their new health points
 
         System.Random percentageOfCritical = new System.Random(); //used to calculate random numbers used in chance based attacks
         float randomFloat; //used in calculating whether units get critical hits
@@ -49,7 +48,7 @@ public class battleAnimationScript : MonoBehaviour {
         int attackerAttack = attackerUnitScript.attack;
 
         //new defending unit health is:
-        //defenderCurrentHP - (attackerAttack - defenderDefence) [ * attackerCritical / attackerAccuracy is the chance for a critical to occur ]
+        //defenderCurrentHP - (attackerAttack - defenderDefence) [ * attackerCritical | attackerAccuracy is the chance for a critical to occur ]
 
         int defenderNewHealth; //used to store the defender's new health
 
@@ -57,26 +56,26 @@ public class battleAnimationScript : MonoBehaviour {
 
         if (randomFloat < attackerAccuracy) //determine if critical is applied
         {
-            int attackDefence = attackerAttack - defenderDefence;
-            if (attackDefence < 0) { attackDefence = 0; }
+            int attackDefence = attackerAttack - defenderDefence; 
+            if (attackDefence < 0) { attackDefence = 0; } //difference between attackerAttack and defenderDefence cannot be negative or health will be added to the defender
 
             defenderNewHealth = Convert.ToInt32(Math.Floor(defenderHealth - ((attackDefence) * attackerCritical)));
         }
         else
         {
             int attackDefence = attackerAttack - defenderDefence;
-            if (attackDefence < 0) { attackDefence = 0; }
+            if (attackDefence < 0) { attackDefence = 0; } //difference between attackerAttack and defenderDefence cannot be negative or health will be added to the defender
 
             defenderNewHealth = defenderHealth - (attackDefence);
         }
         if (defenderNewHealth < 0) { defenderNewHealth = 0; }; //health values cannot be negative
-        
-        //attacker is only damaged if the defender achieves a critical (the chance of which is their critical stat). If they do, the damage done to the
+
+        //attacker is only damaged if the defender achieves a critical (the chance of which is their accuracy stat). If they do, the damage done to the
         //attacker is the defending units defence
 
-        int attackerNewHealth; //used to store the attacker's new health
-
         randomFloat = (float)percentageOfCritical.Next(0, 100) / 100f; //get random 2 digit float between 0.00 and 1.00
+
+        int attackerNewHealth; //used to store the attacker's new health
 
         if (randomFloat < defenderAccuracy) //if the defender has a critical, the attacker is damaged by the defenders defence
         {
@@ -88,7 +87,7 @@ public class battleAnimationScript : MonoBehaviour {
         }
         if (attackerNewHealth < 0) { attackerNewHealth = 0; }; //health values cannot be negative
 
-        battlingUnit1.GetComponent<battleAnimationUnit1Script>().attackingUnit = attackingUnit; //set units in battle animation scripts, so that their health
+        battlingUnit1.GetComponent<battleAnimationUnit1Script>().attackingUnit = attackingUnit; //set unit's animation scripts, so that their health
         battlingUnit2.GetComponent<battleAnimationUnit2Script>().defendingUnit = defendingUnit; //stats can be read and the health bar can be changed accordingly
 
         battlingUnit1.GetComponent<Image>().sprite = attackerUnitScript.battleImage; //set battlingUnit canvas' to appropriate sprites
@@ -113,23 +112,23 @@ public class battleAnimationScript : MonoBehaviour {
 
     }
 
-    public void defendAnimation ()
+    public void defendAnimation () //this function is called from battleAnimationUnit1Script and is used to play the defender's animation (after the attacker's)
     {
         unit1Anim.Play("New State"); //set attacker's animation to idle
 
-        //update health bar
+        //update defender's health bar
         battlingUnit2.GetComponent<battleAnimationUnit2Script>().updateHealthBar(defenderUnitScript.maxHP, defenderUnitScript.curHP);
 
         unit2Anim.Play("defendAnimation"); //start the defender's defend animation
     }
 
-    public void fightAnimationComplete()
+    public void fightAnimationComplete() //this function is called from battleAnimationUnit2Script and indicates that the defender animation has completed 
     {
         unit2Anim.Play("New State"); //set defender's animation to idle
 
         cameraRef.backgroundColor = new Color32(147, 179, 128, 0); //after fight animation is complete, change background colour back to green (to match grass)
 
-        this.gameObject.SetActive(false); //stop displaying the battle animation scene
+        this.gameObject.SetActive(false); //stop displaying this battle animation scene
 
         gameMap.SetActive(true); //display the game map
 

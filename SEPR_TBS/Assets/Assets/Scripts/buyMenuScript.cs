@@ -7,16 +7,14 @@ using UnityEngine.EventSystems;
 public class buyMenuScript : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler {
 
     private Transform buyUnitCanvas; //reference to buyUnitCanvas
-    public string unitTypeRep; //this string represents the unit type that is spawned when this button is clicked. Set in the unity editor.
-
-    public unitType aay;
+    public string unitTypeRep; //this string represents the unit type that is spawned when this character divider is clicked (Set in the unity editor)
 
     public void OnPointerClick(PointerEventData eventData) //when a character divider is clicked, change it's colour and attempt to spawn a unit (may not spawn due to)
     {                                                      //insufficient funds or not enough space on the spawn sector
 
         GetComponent<Image>().color = new Color(0, 0, 0, 0.6f); //change character divider colour
 
-        //indicate to the buyUnitCanvas to spawn a unit (the type of which this character divider represents)
+        //indicate to the buyUnitCanvas to spawn a unit (the type of which is unitTypeRep)
         //this function must be called with "StartCoroutine" as a time delay will be propogated should a warning arise
         
         switch(unitTypeRep)
@@ -26,7 +24,7 @@ public class buyMenuScript : MonoBehaviour, IPointerClickHandler, IPointerEnterH
             case "jock": StartCoroutine(buyUnitCanvas.GetComponent<unitCanvasScript>().spawnUnit(unitType.jock)); break;
             case "old": StartCoroutine(buyUnitCanvas.GetComponent<unitCanvasScript>().spawnUnit(unitType.old)); break;
             case "sonic": StartCoroutine(buyUnitCanvas.GetComponent<unitCanvasScript>().spawnUnit(unitType.sonic)); break;
-            default: /*add error code*/ break;
+            default: Debug.Log("that unitType is not recognised"); break;
         }
 
     }

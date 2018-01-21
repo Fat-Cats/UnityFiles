@@ -60,7 +60,7 @@ public class gameMapScript : MonoBehaviour
                     sect.gameObject.GetComponent<SpriteGlow.SpriteGlow>().OutlineWidth = 0;
                 }
 
-                foreach (GameObject unitToAttack in selectedUnit.GetComponent<unitScript>().canAttack()) //add new "can attack" indicators
+                foreach (GameObject unitToAttack in selectedUnit.GetComponent<unitScript>().canAttack()) //remomve old "can attack" indicators
                 {
                     unitToAttack.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1);
                 }
@@ -91,15 +91,13 @@ public class gameMapScript : MonoBehaviour
         }
     }
 
-    public void gameMapStart()
+    public void gameMapStart() //this function is called from the gameMain, at the start of the game, to initialize the map and it's components
     {
-        fightCanvas.GetComponent<battleAnimationScript>().start();
+        fightCanvas.GetComponent<battleAnimationScript>().start(); //initialize fightCanvas (so that it is hidden at the start of the game among other things)
 
         for (int i = 0; i <= 30; i++) //instantiate 30 sector prefabs, set relevant x and y positions on the map and assign appropriate sectorID's
         {
-            Transform createdSector = Instantiate(sector, new Vector3(0, 0, 0), Quaternion.identity); //instantiate new sector and set its position according to
-                                                                                                      //"getSectorCoordinates(i)" which stores sector positions
-                                                                                                      //according to sectorID's
+            Transform createdSector = Instantiate(sector, new Vector3(0, 0, 0), Quaternion.identity); //instantiate new sector 
 
             createdSector.GetComponent<sectorScript>().init(i, this.gameObject); //perform additional initilization of sector (choose sector sprite, specify/set standing points etc...)
             //"this.gameObject" is passed so that each sector can make a reference of the gameMap script, so that it can do things like access the "sectors" list
@@ -124,9 +122,9 @@ public class gameMapScript : MonoBehaviour
         createBuilding("SportsVillage", sectors[13]);
         createBuilding("track", sectors[24]);
         createBuilding("Nisa", sectors[25]);
-        //need to place vice chancelor, as a building, randomly at the start of each game
+        //NEED TO: place vice chancelor, as a building, randomly at the start of each game
 
-        //create units for testing
+        //create a few units for testing
         createUnit(unitType.basic, GetComponentInParent<gameMainScript>().playerList[0], sectors[0]);
         createUnit(unitType.basic, GetComponentInParent<gameMainScript>().playerList[2], sectors[2]);
         createUnit(unitType.basic, GetComponentInParent<gameMainScript>().playerList[3], sectors[3]);
@@ -141,6 +139,7 @@ public class gameMapScript : MonoBehaviour
 
         fightCanvas.gameObject.SetActive(false); //make fight canvas not visible at start of game (will be made visible during battles)
         buyUnitCanvas.gameObject.SetActive(false); //make unit buying canvas not visible at start of game (will be made visible when a building is clicked)
+        //make warningMessage canvas not visible at start of game (will be made visible when a player attempts to buy too many units on one sector)
         buyUnitCanvas.GetComponent<unitCanvasScript>().warningMessage.gameObject.SetActive(false);
     }
 

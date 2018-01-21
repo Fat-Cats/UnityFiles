@@ -10,7 +10,7 @@ public class gameMainScript : MonoBehaviour {
 	// Use this for initialization
 	void Start()
     {
-        //add players to player list
+        //add players to player list (have added all 9 players, representing all 9 colleges, for testing purposes)
         playerList.Add(new player("1", 100, "ALC"));
         playerList.Add(new player("2", 50, "CON"));
         playerList.Add(new player("3", 100, "DER"));
@@ -23,7 +23,7 @@ public class gameMainScript : MonoBehaviour {
 
         this.currentPlayer = playerList[0]; //currentPlayer does not change for testing purposes
 
-        this.transform.GetChild(0).GetComponent<gameMapScript>().gameMapStart();
+        this.transform.GetChild(0).GetComponent<gameMapScript>().gameMapStart(); //initialize game map
     }
 	
 	// Update is called once per frame

@@ -6,14 +6,14 @@ using System;
 
 public class battleAnimationUnit2Script : MonoBehaviour {
 
-    public Transform battleCanvas;
+    public Transform fightCanvas; //stores reference to the fightCanvas canvas
 
-    public GameObject defendingUnit;
+    public GameObject defendingUnit; //used to store GameObject of defending unit 
 
     public void defendAnimationIsComplete() //This function is called when unit 2's defend animation is done playing.
     {                                       //it then calls a function from its canvas parent to end the battle scene
 
-        battleCanvas.GetComponent<battleAnimationScript>().fightAnimationComplete();
+        fightCanvas.GetComponent<battleAnimationScript>().fightAnimationComplete();
 
     }
 

@@ -622,7 +622,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitTypeRep: basic
-  aay: 0
 --- !u!114 &160561927
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -706,7 +705,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitTypeRep: old
-  aay: 0
 --- !u!114 &272221449
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -860,7 +858,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitTypeRep: sonic
-  aay: 0
 --- !u!114 &303762724
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1348,7 +1345,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitTypeRep: jock
-  aay: 0
 --- !u!114 &622339074
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1432,7 +1428,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitTypeRep: dgirl
-  aay: 0
 --- !u!114 &632450591
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1938,7 +1933,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16781b1d514be4d4687986245dfd1fa5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  battleCanvas: {fileID: 1079929669}
+  fightCanvas: {fileID: 1079929669}
   myHealthBar: {fileID: 878542513}
   attackingUnit: {fileID: 0}
 --- !u!1 &1079929665
@@ -2293,7 +2288,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e99c26cbba9f3140bec88edec75af86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  battleCanvas: {fileID: 1079929669}
+  fightCanvas: {fileID: 1079929669}
   defendingUnit: {fileID: 0}
 --- !u!95 &1315924637
 Animator:

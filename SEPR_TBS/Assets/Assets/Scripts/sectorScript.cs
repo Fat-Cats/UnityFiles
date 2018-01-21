@@ -10,16 +10,15 @@ public class sectorScript : MonoBehaviour {
     public GameObject[] unitsContained = new GameObject[3]; //stores all units currently placed in this sector [maximum: 3]
     public Vector3[] standingPoints = new Vector3[3]; //stores vectors representing locations for 3 units to stand in, on this sector
     public int sectorID; //this stores this sectors sectorID
-    public bool isBusStop;
+    public bool isBusStop; //indicates whether this sector is a bus stop (2 players on distant bus stops should not be able to battle)
 
-    public player owner; //this shows which player currently owns this sector. a sector is owned by a player if one of their unit's enters through the sector.
+    public player owner; //this shows which player currently owns this sector. a sector is owned by a player if one of their unit's enters the sector.
                          //a player loses control of a sector if another player's unit enters a sector. each turn, each player earns money for the number of sectors
                          //that they control
 
     public void init(int sectorID, GameObject gameMap) //this function is used to initialize each sector, after it is instantiated
     {
         this.sectorID = sectorID; //set sectorID
-
         this.gameMap = gameMap; //set a reference to the gameMap
         this.transform.parent = gameMap.transform; //make this sector a child of gameMap object
 
@@ -30,14 +29,14 @@ public class sectorScript : MonoBehaviour {
         if (new int[] { 0, 1, 2, 4, 5, 6, 8, 11, 12, 14, 15, 16, 17, 20, 24, 25, 26 }.Contains(sectorID)) //if this sector is part of west campus
         {
             //scale west sectors
-            float scaleFactor = 4.6f;//0.99373699113f;
+            float scaleFactor = 4.6f;
             this.transform.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
         }
-        else //if this sector is ppart of east campus
+        else //if this sector is part of east campus
         {
             //scale east sectors
-            float scaleFactorX = 3.4f;//0.73697657572f;
-            float scaleFactorY = 3f;//0.66770329348f;
+            float scaleFactorX = 3.4f;
+            float scaleFactorY = 3f;
             this.transform.localScale = new Vector3(scaleFactorX, scaleFactorY, scaleFactorX);
             this.transform.Rotate(new Vector3(-12.388f, -12.388f, -12.388f));
         }
@@ -45,19 +44,19 @@ public class sectorScript : MonoBehaviour {
         {
             this.isBusStop = true;
         }
-        else
+        else //if this sector does not contain a bus stop
         {
             this.isBusStop = false;
         }
 
-            Object[] sectorSprites = Resources.LoadAll("mapSectors"); //load all map sector sprites 
+        Object[] sectorSprites = Resources.LoadAll("mapSectors"); //load all map sector sprites 
         this.gameObject.GetComponent<SpriteRenderer>().sprite = (Sprite)sectorSprites[sectorID + 1]; //set current sprite to appropriate sector as indicated by sectorID 
 
         this.gameObject.AddComponent<PolygonCollider2D>(); //add polygoncollider component to this sector so that it can be clicked by the user
-        this.gameObject.AddComponent<SpriteGlow.SpriteGlow>(); //add a PolygonCollider2D to the unit, so that a border can be drawn around the sector 
+        this.gameObject.AddComponent<SpriteGlow.SpriteGlow>(); //add a SpriteGlow script to this sector so that a border can be drawn around it
         this.gameObject.GetComponent<SpriteGlow.SpriteGlow>().OutlineWidth = 0; //do not draw border around sector when it is created
-        this.gameObject.GetComponent<SpriteGlow.SpriteGlow>().GlowBrightness = 5; //SpriteGlow settings used to ensure borders can be drawn correctly
-        this.gameObject.GetComponent<SpriteGlow.SpriteGlow>().AlphaThreshold = 0.5f; //SpriteGlow settings used to assure borders can be drawn correctly
+        this.gameObject.GetComponent<SpriteGlow.SpriteGlow>().GlowBrightness = 5; //SpriteGlow settings, used to ensure borders can be drawn correctly
+        this.gameObject.GetComponent<SpriteGlow.SpriteGlow>().AlphaThreshold = 0.5f; //SpriteGlow settings, used to assure borders can be drawn correctly
 
 
         this.gameObject.name = "mapSector" + sectorID.ToString(); //set this sectors name to "mapSector" followed by it's sectorID (E.G: "mapSector3")
@@ -127,7 +126,7 @@ public class sectorScript : MonoBehaviour {
                 break;
         }
 
-        for (int i = 0; i < 3; i++) //set all unitsContained values to null because no units should be placed until after a sector is created
+        for (int i = 0; i < 3; i++) //set all unitsContained values to null because (no units should be placed until after a sector is created)
         {
             unitsContained[i] = null;
         }

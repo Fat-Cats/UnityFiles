@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum unitType
+public enum unitType //enum representing all types of possible units
 {
     basic,
     dgirl,

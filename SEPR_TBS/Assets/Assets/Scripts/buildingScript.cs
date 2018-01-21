@@ -9,13 +9,13 @@ public class buildingScript : MonoBehaviour {
     GameObject gameMap; //this is a reference to the gameMap. it is used to close the game map when using the buy units menu
     GameObject sector; //this stores the sector on which this building is placed
 
-    public void Init(string buildingName, GameObject sector, Transform buyUnitCanvas, GameObject theGameMap)
+    public void Init(string buildingName, GameObject sector, Transform buyUnitCanvas, GameObject theGameMap) //called to initialize building after instantiation
     {
         this.buyUnitCanvas = buyUnitCanvas; //set buyUnitCanvas
         this.gameMap = theGameMap; //set theGameMap
-        this.sector = sector; //set sector
+        this.sector = sector; //set sector on which this building is placed
 
-        this.gameObject.transform.SetParent(sector.gameObject.transform); //change buildings parent to the sector that it is placed on
+        this.gameObject.transform.SetParent(sector.gameObject.transform); //change building's parent to the sector that it is placed on
 
         //create a vector representing this objects position in the game (in reference to the sector on which it is placed)
         Vector3 currentPosition = sector.transform.position; //set currentPosition to the position of the sector it is placed on
@@ -78,11 +78,15 @@ public class buildingScript : MonoBehaviour {
                 currentPosition.y += -0.29f;
                 currentPosition.z += -0.5f;
                 break;
+
+            default:
+                Debug.Log("that building type is not recognised");
+                    break;
         }
 
         this.gameObject.GetComponent<Transform>().position = currentPosition; //set this buildings position 
 
-        this.gameObject.AddComponent<PolygonCollider2D>(); //add polygoncollider component to this sector so that it can be clicked by the user
+        this.gameObject.AddComponent<PolygonCollider2D>(); //add polygoncollider component to this building so that it can be clicked by the user
     }
 
     void OnMouseDown() //when a building is clicked, it should open the unit buy menu and hide the game map
@@ -92,7 +96,7 @@ public class buildingScript : MonoBehaviour {
 
         theGameMapScript.selectedUnit = null; //a sector has now been selected, so set the selectedUnit to null
 
-        if (theSelectedUnit != null && theSelectedUnit.GetComponent<unitScript>().canMoveTo().Contains(this.sector)) //if a unit has been selected, and this sector has been clicked, move 
+        if (theSelectedUnit != null && theSelectedUnit.GetComponent<unitScript>().canMoveTo().Contains(this.sector)) //if a unit has been selected, and this building has been clicked, move 
         {                                                                                                                //that unit to this sector, if it is within range
             unitScript theSelectedUnitScript = theSelectedUnit.GetComponent<unitScript>(); //set a reference to the selected unit's unitScript script
             theSelectedUnitScript.moveUnit(this.sector); //move unit to this sector
@@ -101,9 +105,9 @@ public class buildingScript : MonoBehaviour {
         {
             this.buyUnitCanvas.gameObject.SetActive(true); //open the unit buying canvas
             this.gameMap.gameObject.SetActive(false); //close the game map
-            buyUnitCanvas.GetComponent<unitCanvasScript>().warningMessage.gameObject.SetActive(false);
+            buyUnitCanvas.GetComponent<unitCanvasScript>().warningMessage.gameObject.SetActive(false); //do not display the warningMessage
             //set the "spawnPoint" value in the buyUnitCanvas' "unitCanvasScript" script so that newly purchased units will spawn on the same sector
-            //as the building that they clicked to open the buy units menu
+            //as the building that they clicked to open the buy unit menu
             this.buyUnitCanvas.GetComponent<unitCanvasScript>().setSpawnPoint(sector.gameObject);
         }
     }
