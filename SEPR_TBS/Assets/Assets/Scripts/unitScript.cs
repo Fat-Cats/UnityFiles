@@ -1,4 +1,8 @@
-﻿using System.Collections;
+﻿//HEADER
+//game executable can be found at: https://drive.google.com/open?id=18i6A5XMkF-5kVlz-RSsyYvMSnSwSpPnT
+//HEADER
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
@@ -127,10 +131,10 @@ public class unitScript : MonoBehaviour {
 
         this.gameObject.AddComponent<PolygonCollider2D>(); //add a PolygonCollider2D to the unit, so that the unit can be clicked
 
-        this.gameObject.AddComponent<SpriteGlow.SpriteGlow>(); //add a SpriteGlow script to the unit, so that a border can be drawn around the unit when selected
-        this.gameObject.GetComponent<SpriteGlow.SpriteGlow>().OutlineWidth = 0; //do not draw border around unit when it is created
-        this.gameObject.GetComponent<SpriteGlow.SpriteGlow>().GlowBrightness = 5; //SpriteGlow settings used to ensure borders can be drawn correctly
-        this.gameObject.GetComponent<SpriteGlow.SpriteGlow>().AlphaThreshold = 0.5f; //SpriteGlow settings used to assure borders can be drawn correctly
+        //this.gameObject.AddComponent<SpriteGlow.SpriteGlow>(); //add a SpriteGlow script to the unit, so that a border can be drawn around the unit when selected
+        //this.gameObject.GetComponent<SpriteGlow.SpriteGlow>().OutlineWidth = 0; //do not draw border around unit when it is created
+        //this.gameObject.GetComponent<SpriteGlow.SpriteGlow>().GlowBrightness = 5; //SpriteGlow settings used to ensure borders can be drawn correctly
+        //this.gameObject.GetComponent<SpriteGlow.SpriteGlow>().AlphaThreshold = 0.5f; //SpriteGlow settings used to assure borders can be drawn correctly
     }
 
     void OnMouseDown() //called when the user clicks on this gameObject

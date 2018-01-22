@@ -1,4 +1,8 @@
-﻿using System.Collections;
+﻿//HEADER
+//game executable can be found at: https://drive.google.com/open?id=18i6A5XMkF-5kVlz-RSsyYvMSnSwSpPnT
+//HEADER
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
@@ -23,7 +27,7 @@ public class gameMapScript : MonoBehaviour
 
             unitScript _selectedUnitScript; //this is used to store the _selectedUnit's unitScript (so that ".getComponent..." does not need to be used at every reference)
             unitScript valueUnitScript; //this is used to store the value's unitScript 
-            SpriteGlow.SpriteGlow _selectedGlowScript; //this is used to store the _selectedUnit's SpriteGlow script 
+            //SpriteGlow.SpriteGlow _selectedGlowScript; //this is used to store the _selectedUnit's SpriteGlow script 
 
             if (value != null && _selectedUnit != null) //check if a new unit has been selected whilst another unit is selected
             {
@@ -51,13 +55,13 @@ public class gameMapScript : MonoBehaviour
             if (_selectedUnit != null) //if a unit has previously been selected, remove its borders before changing selectedUnit's value
             {
                 _selectedUnitScript = _selectedUnit.GetComponent<unitScript>(); //if the old selected unit (_selectedUnit) is not null, set its unitScript
-                _selectedGlowScript = _selectedUnit.GetComponent<SpriteGlow.SpriteGlow>(); //if the old selected unit (_selectedUnit) is not null, set its SpriteGlow script
+                //_selectedGlowScript = _selectedUnit.GetComponent<SpriteGlow.SpriteGlow>(); //if the old selected unit (_selectedUnit) is not null, set its SpriteGlow script
 
-                _selectedGlowScript.OutlineWidth = 0; //remove old selected unit border
+                //_selectedGlowScript.OutlineWidth = 0; //remove old selected unit border
 
                 foreach (GameObject sect in _selectedUnitScript.canMoveTo()) //remove old selected unit's "can move to" indicators
                 {
-                    sect.gameObject.GetComponent<SpriteGlow.SpriteGlow>().OutlineWidth = 0;
+                    //sect.gameObject.GetComponent<SpriteGlow.SpriteGlow>().OutlineWidth = 0;
                 }
 
                 foreach (GameObject unitToAttack in selectedUnit.GetComponent<unitScript>().canAttack()) //remomve old "can attack" indicators
@@ -70,16 +74,16 @@ public class gameMapScript : MonoBehaviour
 
             if (_selectedUnit != null) //if the new unit is not null, highlight it and the sectors to which it can move
             {
-                _selectedUnitScript = _selectedUnit.GetComponent<unitScript>(); //if the newly selected unit (_selectedUnit) is not null, set its unitScript
-                _selectedGlowScript = _selectedUnit.GetComponent<SpriteGlow.SpriteGlow>(); //if the newly selected unit (_selectedUnit) is not null, set its SpriteGlow script
+               // _selectedUnitScript = _selectedUnit.GetComponent<unitScript>(); //if the newly selected unit (_selectedUnit) is not null, set its unitScript
+                //_selectedGlowScript = _selectedUnit.GetComponent<SpriteGlow.SpriteGlow>(); //if the newly selected unit (_selectedUnit) is not null, set its SpriteGlow script
 
-                _selectedGlowScript.OutlineWidth = 3; //draw border around unit
-                _selectedGlowScript.GlowColor = _selectedUnitScript.owner.teamColour; //color unit's border using it's team's colour
+                //_selectedGlowScript.OutlineWidth = 3; //draw border around unit
+                //_selectedGlowScript.GlowColor = _selectedUnitScript.owner.teamColour; //color unit's border using it's team's colour
 
                 foreach (GameObject sect in selectedUnit.GetComponent<unitScript>().canMoveTo()) //add new selected unit's "can move to" indicators
                 {
-                    sect.gameObject.GetComponent<SpriteGlow.SpriteGlow>().OutlineWidth = 3;
-                    sect.gameObject.GetComponent<SpriteGlow.SpriteGlow>().GlowColor = _selectedUnitScript.owner.teamColour;
+                    //sect.gameObject.GetComponent<SpriteGlow.SpriteGlow>().OutlineWidth = 3;
+                    //sect.gameObject.GetComponent<SpriteGlow.SpriteGlow>().GlowColor = _selectedUnitScript.owner.teamColour;
                 }
 
                 foreach (GameObject unitToAttack in selectedUnit.GetComponent<unitScript>().canAttack()) //add new "can attack" indicators

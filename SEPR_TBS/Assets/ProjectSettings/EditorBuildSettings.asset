@@ -6,8 +6,5 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/fight_scene.unity
-    guid: 8f4803655ebeb9b42a7f3c365d88ae5d
-  - enabled: 1
     path: Assets/gameMap.unity
-    guid: 33b28a8f42914b44fbacf15a3a1dedad
+    guid: 8a01b4a75753da446b4545de3ca5415c
